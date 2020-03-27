@@ -25,8 +25,8 @@
 	  	<hr/>
 	  	<div class="form-submit">
 	  		<label>Adicionar ações</label>
-			<textarea></textarea>
-			<input type="submit" />
+			<input type="text" name="action-name" />
+			<input type="button" class="btn btn-default" onClick="setAction()" value="Adicionar" />
 		</div>
 	  </div>
 	</div>

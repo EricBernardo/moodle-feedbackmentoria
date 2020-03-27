@@ -37,7 +37,7 @@ function getOptionsFilter() {
 	    	select_teacher.append('<option value="' + value.id + '">' + value.fullname + '</option>')
 	    });
 
-	    getListActions();
+	    onSubmit();
 
 	}).fail(function() {
 	    // alert( "error" );
@@ -48,27 +48,122 @@ function getOptionsFilter() {
 
 }
 
+function onSubmit() {
+	getListActions();
+}
+
 function getListActions() {
 	
 	let el = $('.acoes .panel-body .overflow');
 		
-	el.html('')
+	el.html('');
 
 	$.ajax('ajax.php', { 
 		data: { 
 			id: __id,
 			action: 'actions',
 			student_id: $('select[name="student"]').val(),
-			teacher_id: $('select[name="teacher"]').val()
+			teacher_id: $('select[name="teacher"]').val()			
 		},
 		type: 'get',
 		dataType: 'json'
 	}).done(function(data) {				
 
+		let html = '';
+
+		html += ('<table style="width:99%"><tbody>');
+
 	    data.actions.map(function(value) {
-	    	el.append('<div class="checkbox"><label><input type="checkbox" value="' + value.id + '">' + value.name + '</label></div>')
+	    	
+	    	html += ('<tr>');
+	    	
+	    	html += ('<td>');
+	    	html += ('<input onClick="setChecked($(this))" type="checkbox" ' + (value.is_checked == 1 ? 'checked' : '') + ' value="' + value.id + '"/>');
+	    	html += ('</td>');
+
+	    	html += ('<td>');
+	    	html += (value.name);
+	    	html += ('</td>');
+
+	    	html += ('<td>');
+	    	html += ('<button class="btn btn-danger btn-remover">x</button>');
+	    	html += ('</td>');
+
+	    	html += ('</tr>');
+
 	    });
 
+	    html += ('</tbody></table>');
+
+	    el.html(html);
+
+	}).fail(function() {
+	}).always(function() {
+	});
+
+}
+
+function setAction() {
+
+	let name = $('input[name="action-name"]').val();
+
+	if(!name) {
+		alert('Preencha o campo "Adicionar ações".')
+		return;
+	}
+	
+	let el = $('.acoes .panel-body .overflow');
+
+	$.ajax('ajax.php', { 
+		data: { 
+			id: __id,
+			action: 'set_action',
+			student_id: $('select[name="student"]').val(),
+			teacher_id: $('select[name="teacher"]').val(),
+			name: name
+		},
+		type: 'post',
+		dataType: 'json'
+	}).done(function(data) {
+
+		let html = '';				
+
+		html += ('<tr>');
+	    	
+    	html += ('<td>');
+    	html += ('<input onClick="setChecked($(this))" type="checkbox" ' + (data.action.is_checked == 1 ? 'checked' : '') + ' value="' + data.action.id + '"/>');
+    	html += ('</td>');
+
+    	html += ('<td>');
+    	html += (data.action.name);
+    	html += ('</td>');
+
+    	html += ('<td>');
+    	html += ('<button class="btn btn-danger btn-remover">x</button>');
+    	html += ('</td>');
+
+    	html += ('</tr>');
+
+		el.find('table tbody').append(html)
+
+	}).fail(function() {
+	}).always(function() {
+	});
+
+}
+
+function setChecked(el) {
+	
+	$.ajax('ajax.php', { 
+		data: { 
+			action: 'checked_action',
+			id: __id,
+			feedbackmentoria_action_id: el.val(),
+			is_checked: el.is(':checked') ? 1 : 0
+		},
+		type: 'post',
+		dataType: 'json'
+	}).done(function() {				
 	}).fail(function() {
 	}).always(function() {
 	});

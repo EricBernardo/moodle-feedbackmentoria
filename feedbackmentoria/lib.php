@@ -149,18 +149,13 @@ function feedbackmentoria_format_list($data) {
     return $result;
 }
 
-function feedbackmentoria_get_actions($courseid) {
-
-    global $DB, $USER;
-
-    $roleassignment = $DB->get_record('role_assignments', ['userid' => $USER->id]);
-    $role = $DB->get_record('role', ['id' => $roleassignment->roleid]);
-
-    if($role->shortname == 'student') {
-      $actions = $DB->get_records('feedbackmentoria_actions', array('student_id' => $USER->id));
-    }
+function feedbackmentoria_get_actions($feedbackmentoria_id, $teacher, $student) {
+    global $DB;
+    
+    $actions = $DB->get_records('feedbackmentoria_actions', array('feedbackmentoria_id' => $feedbackmentoria_id, 'student_id' => $student, 'teacher_id' => $teacher));
 
     return $actions;
+
 }
 
 function feedbackmentoria_format_actionlist($actions) {
@@ -169,12 +164,39 @@ function feedbackmentoria_format_actionlist($actions) {
         $item = array();
         $item['id'] = $action->id;
         $item['name'] = $action->name;
+        $item['is_checked'] = $action->is_checked;
         $result[] = $item;
     }
     return $result;
 }
 
-function print_r2($var, $die = true) {
+function feedbackmentoria_action_add($feedbackmentoria_id, $teacher, $student, $text) {
+    global $DB;
+
+    $data->feedbackmentoria_id = $feedbackmentoria_id;
+    $data->teacher_id = $teacher;
+    $data->student_id = $student;
+    $data->name = $text;
+    $data->is_checked = 0;
+    $data->timecreated = time();
+    
+    $id = $DB->insert_record('feedbackmentoria_actions', $data);
+    
+    return array(
+        'id' => $id,
+        'name' => $text,
+        'is_checked' => 0
+    );
+}
+
+function feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checked) {
+    global $DB;
+    $data->id = $feedbackmentoria_action_id;
+    $data->is_checked = $is_checked;
+    $DB->update_record('feedbackmentoria_actions', $data);
+}
+
+function dd($var, $die = true) {
     echo '<pre>';
     print_r($var);
     echo '</pre>';

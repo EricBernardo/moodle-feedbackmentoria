@@ -20,8 +20,8 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
 
-$action       = optional_param('action', '', PARAM_TEXT);
-$id      = required_param('id', PARAM_ALPHANUM);
+$action = required_param('action', PARAM_TEXT);
+$id = required_param('id', PARAM_ALPHANUM);
 
 // if (!confirm_sesskey()) {
 //     throw new moodle_exception('invalidsesskey', 'error');
@@ -57,14 +57,30 @@ header('Content-Type: text/html; charset=utf-8');
 switch ($action) {
     
     case 'actions':
-        $actions = feedbackmentoria_get_actions($course->id);
+        $teacher = required_param('teacher_id', PARAM_ALPHANUM);
+        $student = required_param('student_id', PARAM_ALPHANUM);
+        $actions = feedbackmentoria_get_actions($feedbackmentoria->id, $teacher, $student);
         $actions = feedbackmentoria_format_actionlist($actions);
         $response['actions'] = $actions;
         echo json_encode($response);
     break;
 
-    case 'options_filter':
+    case 'set_action':
+        $teacher = required_param('teacher_id', PARAM_ALPHANUM);
+        $student = required_param('student_id', PARAM_ALPHANUM);
+        $name    = required_param('name', PARAM_TEXT);
+        $action = feedbackmentoria_action_add($feedbackmentoria->id, $teacher, $student, $name);
+        $response['action'] = $action;
+        echo json_encode($response);
+    break;
 
+    case 'checked_action':
+        $feedbackmentoria_action_id = required_param('feedbackmentoria_action_id', PARAM_ALPHANUM);
+        $is_checked = required_param('is_checked', PARAM_ALPHANUM);
+        feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checked);
+    break;
+
+    case 'options_filter':
         $students = feedbackmentoria_get($course->id, 'student');        
         $students = feedbackmentoria_format_list($students);
         $teachers = feedbackmentoria_get($course->id, 'teacher');        

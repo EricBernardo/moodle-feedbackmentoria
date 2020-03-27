@@ -3,6 +3,22 @@ hr {
 	float: left;
 }
 
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
 .form-control {
 	float: left;
 	height: auto;
@@ -54,7 +70,7 @@ hr {
     margin-top: 28px;
 }
 
-.button-filter button {
+.button-filter input[type=button] {
 	width: 100%;
 }
 
@@ -106,6 +122,14 @@ hr {
 	float: left; 	
 }
 
+.acoes .btn-remover {
+	float: right;
+    width: 25px;
+    margin-left: 10px;
+    height: 25px;
+    padding: 0;
+}
+
 .feedback .overflow p {
 	width: 100%;
 	float: left;
@@ -118,11 +142,19 @@ hr {
 	margin-bottom: 10px; 
 }
 
-.form-submit textarea {
-	width: 100%;
-    float: left;
-    margin-top: 10px;
-    margin-bottom: 10px;
+.form-submit input {
+	width: 70%;
+	float: left;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 35px;
+	border-radius: 3px;
+	border: 1px solid #ced4da;
+}
+
+.form-submit input[type=button] {
+	width: 28%;
+    margin-left: 2%;
 }
 
 .form-submit label {
@@ -144,5 +176,12 @@ hr {
 	    margin: 0px;
 	    margin-top: 20px;
    }
+
+   .form-submit input,
+   .form-submit input[type=button] {
+		width: 100%;
+		margin: 0px;
+		margin-top: 20px;
+	}
 
 }

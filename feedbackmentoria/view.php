@@ -83,9 +83,9 @@ echo '
 				<select class="select" name="student"></select>
 			</div>
 			<div class="form-control button-filter">		
-				<button class="btn btn-default">Pesquisar</button>
+				<input type="button" class="btn btn-default" onClick="onSubmit()" value="Pesquisar" />
 			</div>
-			
+
 		</form>
 	</p>
 ';

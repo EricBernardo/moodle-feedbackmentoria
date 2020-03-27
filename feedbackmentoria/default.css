@@ -3,10 +3,32 @@ hr {
 	float: left;
 }
 
+.form-control {
+	float: left;
+	height: auto;
+	border: none;
+	padding: 0px;
+}
+
+.form-control label { 
+	width: 100%;
+	font-weight: bold;
+	float: left;
+}
+
+.select-teachers,
+.select-students {
+	width: 40%;
+}
+
+.select-teachers {
+	width: 38%;
+	margin-right: 2%;
+}
+
 .select {	
 	display: block;
 	float: left;
-	width: 25%;
 	height: calc(1.5em + 0.75rem + 2px);
 	padding: 0.375rem 0.75rem;
 	font-size: 1rem;
@@ -18,15 +40,22 @@ hr {
 	border: 1px solid #ced4da;
 	border-radius: 0.25rem;
 	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.select-students {
-	margin-right: 2%;
+	width: 100%;
 }
 
 .select:disabled, .select[readonly] {
   background-color: #e9ecef;
   opacity: 1;
+}
+
+.button-filter {
+	width: 18%;
+    margin-left: 2%;
+    margin-top: 28px;
+}
+
+.button-filter button {
+	width: 100%;
 }
 
 .checkbox {
@@ -47,7 +76,6 @@ hr {
 	width: 100%;
 	margin-top: 20px;		
 	float: left;
-	margin-bottom: 20px;
 	background-color: #fff;
 	border: 1px solid #ced4da;
 	border-radius: 4px;
@@ -73,10 +101,9 @@ hr {
 	height: 400px;
 }
 
-.feedback {
-	width: 70%;	
-	float: left;
-	margin-right: 2%; 	
+.feedback, .acoes {
+	width: 100%;	
+	float: left; 	
 }
 
 .feedback .overflow p {
@@ -89,11 +116,6 @@ hr {
 	width: 100%;
 	float: left;
 	margin-bottom: 10px; 
-}
-
-.acoes {
-	width: 28%;	
-	float: left;
 }
 
 .form-submit textarea {
@@ -111,18 +133,16 @@ hr {
 
 @media (max-width: 768px) {
 
-   .select {
+   .select-teachers,
+   .select-students {
    		width: 100%;
-   		margin-top: 20px; 
+   		margin-top: 10px;
    }
 
-   .feedback {
-		width: 100%;	
-		float: left;
-	}
-
-	.acoes {
-		width: 100%;	
-	}
+   .button-filter {
+	   	width: 100%;
+	    margin: 0px;
+	    margin-top: 20px;
+   }
 
 }

@@ -11,36 +11,70 @@ var getParams = function (url) {
 	return params;
 }
 
-const params = getParams(window.location.href);
+const __params = getParams(window.location.href);
 
-const id = params.id;
+const __id = __params.id;
 
-function getListStudents() {
+function getOptionsFilter() {
 	
-	let select = $('select[name="student"]');
-	
-	select.attr('disabled', true);
+	let select_student = $('select[name="student"]');	
+	select_student.attr('disabled', true);
+
+	let select_teacher = $('select[name="teacher"]');	
+	select_teacher.attr('disabled', true);
 
 	$.ajax('ajax.php', { 
-		data: { action: 'students', id: id },
-		type: 'post',
+		data: { action: 'options_filter', id: __id },
+		type: 'get',
 		dataType: 'json'
 	}).done(function(data) {
 				
-		select.html('<option value="">Aluno</option>')
-
 	    data.students.map(function(value) {
-	    	select.append('<option value="' + value.id + '">' + value.fullname + '</option>')
+	    	select_student.append('<option value="' + value.id + '">' + value.fullname + '</option>')
 	    });
+
+	    data.teachers.map(function(value) {
+	    	select_teacher.append('<option value="' + value.id + '">' + value.fullname + '</option>')
+	    });
+
+	    getListActions();
 
 	}).fail(function() {
 	    // alert( "error" );
 	}).always(function() {
-	    select.attr('disabled', false);
+	    select_student.attr('disabled', false);
+	    select_teacher.attr('disabled', false);
+	});
+
+}
+
+function getListActions() {
+	
+	let el = $('.acoes .panel-body .overflow');
+		
+	el.html('')
+
+	$.ajax('ajax.php', { 
+		data: { 
+			id: __id,
+			action: 'actions',
+			student_id: $('select[name="student"]').val(),
+			teacher_id: $('select[name="teacher"]').val()
+		},
+		type: 'get',
+		dataType: 'json'
+	}).done(function(data) {				
+
+	    data.actions.map(function(value) {
+	    	el.append('<div class="checkbox"><label><input type="checkbox" value="' + value.id + '">' + value.name + '</label></div>')
+	    });
+
+	}).fail(function() {
+	}).always(function() {
 	});
 
 }
 
 $(document).ready(function(){
-	getListStudents();
+	getOptionsFilter();
 });

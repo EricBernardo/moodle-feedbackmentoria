@@ -98,44 +98,77 @@ function feedbackmentoria_delete_instance($id) {
     return true;
 }
 
-// Functions that require some SQL.
+function feedbackmentoria_get($p_courseid, $p_type) {
+    global $DB, $USER;
 
-/**
- * @global object
- * @param int $chatid
- * @param int $groupid
- * @param int $groupingid
- * @return array
- */
-function feedbackmentoria_get_students($courseid) {
-    global $DB;
-    $contextid = get_context_instance(CONTEXT_COURSE, $courseid);
+    $where = '';
+
+    $roleassignment = $DB->get_record('role_assignments', ['userid' => $USER->id]);
+    $role = $DB->get_record('role', ['id' => $roleassignment->roleid]);
+
+    if($role->shortname == 'student') {
+
+        $where .= " AND u.id = {$USER->id}";
+
+    } else {
+
+        if($p_type == 'teacher') {
+            $where .= " AND r.shortname IN('editingteacher', 'teacher')";
+        }
+
+    }
+
+    if($p_type == 'student') {
+        $where .= " AND r.shortname IN('student')";
+    }
+
+    $contextid = get_context_instance(CONTEXT_COURSE, $p_courseid);
 
     $sql = "
         SELECT u.id, u.firstname, u.lastname
-        FROM mdl_user u, mdl_role_assignments r
-        WHERE u.id = r.userid AND r.contextid = {$contextid->id}
+        FROM mdl_user u
+        JOIN mdl_role_assignments ra ON u.id = ra.userid
+        JOIN mdl_role r ON r.id = ra.roleid
+        WHERE ra.contextid = {$contextid->id}
+        $where
+        ORDER BY
+            u.firstname, u.lastname
     ";
 
     return $DB->get_records_sql($sql);
 }
 
-/**
- * @global object $DB
- * @global object $CFG
- * @global object $COURSE
- * @global object $OUTPUT
- * @param object $students
- * @param object $course
- * @return array return formatted user list
- */
-function feedbackmentoria_format_studentlist($students, $course) {
-    global $CFG, $DB, $COURSE, $OUTPUT;
+function feedbackmentoria_format_list($data) {
     $result = array();
-    foreach ($students as $user) {
+    foreach ($data as $user) {
         $item = array();
         $item['id'] = $user->id;
         $item['fullname'] = $user->firstname . ' ' . $user->lastname;        
+        $result[] = $item;
+    }
+    return $result;
+}
+
+function feedbackmentoria_get_actions($courseid) {
+
+    global $DB, $USER;
+
+    $roleassignment = $DB->get_record('role_assignments', ['userid' => $USER->id]);
+    $role = $DB->get_record('role', ['id' => $roleassignment->roleid]);
+
+    if($role->shortname == 'student') {
+      $actions = $DB->get_records('feedbackmentoria_actions', array('student_id' => $USER->id));
+    }
+
+    return $actions;
+}
+
+function feedbackmentoria_format_actionlist($actions) {
+    $result = array();
+    foreach ($actions as $action) {
+        $item = array();
+        $item['id'] = $action->id;
+        $item['name'] = $action->name;
         $result[] = $item;
     }
     return $result;

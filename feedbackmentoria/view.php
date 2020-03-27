@@ -72,11 +72,24 @@ echo '<p>' . ($moduleinstance->intro) . '</p>';
 
 echo '
 	<p>
-		<select class="select select-students" name="student"></select>
-		<select class="select"><option>Professor</option></select>
+		<form id="filter">
+
+			<div class="form-control select-teachers">
+    			<label>Professor</label>
+				<select class="select" name="teacher"></select>
+			</div>
+			<div class="form-control select-students">
+				<label>Aluno</label>
+				<select class="select" name="student"></select>
+			</div>
+			<div class="form-control button-filter">		
+				<button class="btn btn-default">Pesquisar</button>
+			</div>
+			
+		</form>
 	</p>
 ';
-
+/*
 echo '
 	<div class="feedback">
 		<div class="panel panel-default">
@@ -141,5 +154,8 @@ echo '
 		</div>
 	</div>
 ';
+*/
+
+include($CFG->dirroot.'/mod/feedbackmentoria/studentsview.php');
 
 echo $OUTPUT->footer();

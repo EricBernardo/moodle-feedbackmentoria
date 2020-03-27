@@ -29,5 +29,6 @@ $string['pluginname'] = 'Feedback Mentoria';
 $string['modulename'] = 'Feedback Mentoria';
 
 $string['feedbackmentorianame'] = 'Nome';
-$string['feedbackmentoriasettings'] = 'Configurações';
-$string['feedbackmentoriafieldset'] = '';
+$string['feedbackmentoriasettings'] = 'Configurações do Feedback Mentoria';
+$string['feedbackmentoriafieldset'] = 'Campos do Feedback Mentoria';
+$string['pluginadministration'] = 'Administração do Feedback Mentoria';

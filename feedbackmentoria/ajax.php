@@ -20,7 +20,7 @@ require(__DIR__.'/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
 
-$action       = optional_param('action', '', PARAM_ALPHANUM);
+$action       = optional_param('action', '', PARAM_TEXT);
 $id      = required_param('id', PARAM_ALPHANUM);
 
 // if (!confirm_sesskey()) {
@@ -56,10 +56,21 @@ header('Content-Type: text/html; charset=utf-8');
 
 switch ($action) {
     
-    case 'students':
-        $students = feedbackmentoria_get_students($course->id);
-        $students = feedbackmentoria_format_studentlist($students, $course);
+    case 'actions':
+        $actions = feedbackmentoria_get_actions($course->id);
+        $actions = feedbackmentoria_format_actionlist($actions);
+        $response['actions'] = $actions;
+        echo json_encode($response);
+    break;
+
+    case 'options_filter':
+
+        $students = feedbackmentoria_get($course->id, 'student');        
+        $students = feedbackmentoria_format_list($students);
+        $teachers = feedbackmentoria_get($course->id, 'teacher');        
+        $teachers = feedbackmentoria_format_list($teachers);
         $response['students'] = $students;
+        $response['teachers'] = $teachers;
         echo json_encode($response);
     break;
 

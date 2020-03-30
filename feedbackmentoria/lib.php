@@ -168,7 +168,7 @@ function feedbackmentoria_actions_list($actions) {
     return $result;
 }
 
-function feedbackmentoria_comments($feedbackmentoria_id, $teacher, $student) {
+function feedbackmentoria_comments($feedbackmentoria_id, $teacher_id, $student_id) {
     global $DB;
     
     $sql = "
@@ -179,6 +179,9 @@ function feedbackmentoria_comments($feedbackmentoria_id, $teacher, $student) {
             concat(us.firstname, ' ', us.lastname) user_send
         FROM mdl_feedbackmentoria_comments c
         JOIN mdl_user us on us.id = c.user_send_id
+        WHERE c.teacher_id = {$teacher_id}
+        AND c.student_id = {$student_id}
+        AND c.feedbackmentoria_id = {$feedbackmentoria_id}
         ORDER BY
             c.timecreated asc
     ";

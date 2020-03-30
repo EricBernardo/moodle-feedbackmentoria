@@ -135,7 +135,7 @@ tr:hover {
 
 .overflow {
 	overflow-y: scroll;
-	max-height: 400px;
+	height: 400px;
 }
 
 .form-submit input {

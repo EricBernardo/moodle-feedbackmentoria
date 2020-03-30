@@ -2,14 +2,11 @@
 	<form id="filter">
 		<div class="form-control select-teachers">
 			<label>Professor</label>
-			<select class="select" name="teacher"></select>
+			<select class="select" name="teacher" onchange="onSubmit()"></select>
 		</div>
 		<div class="form-control select-students">
 			<label>Aluno</label>
-			<select class="select" name="student"></select>
-		</div>
-		<div class="form-control button-filter">		
-			<input type="button" class="btn btn-default" onClick="onSubmit()" value="Pesquisar" />
+			<select class="select" name="student" onchange="onSubmit()"></select>
 		</div>
 	</form>
 </p>

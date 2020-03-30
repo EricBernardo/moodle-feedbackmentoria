@@ -210,7 +210,7 @@ tr:hover {
    }
 
    .form-submit input,
-   .form-submit input[type=button] {
+   .form-submit input[type=submit] {
 		width: 100%;
 		margin: 0px;
 		margin-top: 20px;

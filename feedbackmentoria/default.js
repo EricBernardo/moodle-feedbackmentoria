@@ -144,7 +144,7 @@ function getComments() {
 		    }
 
 			html += '<p>'
-				html +='<b>' + value.user_send + ' ' + value.date + '</b>';
+				html +='<b>' + value.user_send + ' <span class="date">(' + value.date + ')</span></b>';
 				html += value.comment;
 			html += '</p>'
 
@@ -153,6 +153,8 @@ function getComments() {
 	    });
 
 	    el.html(html);
+
+	    scrollBottom(el);
 
 	}).fail(function() {
 	}).always(function() {
@@ -243,6 +245,8 @@ function actionCreate() {
 }
 
 function commentCreate() {
+
+	let el = $('.feedback .panel-body .overflow');
 	
 	const textarea = $('#form-comment').find('textarea[name="comment"]');
 
@@ -271,8 +275,23 @@ function commentCreate() {
 		if(typeof(data.error) == 'string') {
 			setModal('Error', data.error, null, 'Fechar'); return;
 		}
+
+	    var html = '';
+
+		if(el.find('p').length > 0) {
+	    	html += '<hr />';
+	    }
+
+		html += '<p>'
+			html +='<b>' + data.comment.user_send + ' <span class="date">(' + data.comment.date + ')</span></b>';
+			html += data.comment.comment;
+		html += '</p>';
+
+		el.append(html);
 		
 		textarea.val('');
+
+		scrollBottom(el);
 
 	}).fail(function() {
 	}).always(function() {
@@ -340,6 +359,10 @@ function actionDelete(action_id) {
 	}).always(function() {			
 	});
 
+}
+
+function scrollBottom(el) {
+	el.scrollTop(el[0].scrollHeight);
 }
 
 $(document).ready(function(){

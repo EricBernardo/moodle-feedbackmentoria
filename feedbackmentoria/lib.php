@@ -180,7 +180,7 @@ function feedbackmentoria_comments($feedbackmentoria_id, $teacher, $student) {
         FROM mdl_feedbackmentoria_comments c
         JOIN mdl_user us on us.id = c.user_send_id
         ORDER BY
-            c.timecreated desc
+            c.timecreated asc
     ";
 
     return $DB->get_records_sql($sql);
@@ -193,7 +193,7 @@ function feedbackmentoria_comments_list($comments) {
     foreach ($comments as $action) {
         $item = array();
         $item['id'] = $action->id;
-        $item['comment'] = $action->comment;
+        $item['comment'] = nl2br($action->comment);
         $item['user_send'] = $action->user_send;
         $item['date'] = date('d/m/Y H:i', $action->timecreated);
         $result[] = $item;
@@ -216,7 +216,7 @@ function feedbackmentoria_action_create($feedbackmentoria_id, $teacher_id, $stud
     
     return array(
         'id' => $id,
-        'name' => $text,
+        'name' => $name,
         'is_checked' => 0
     );
 }
@@ -263,7 +263,7 @@ function feedbackmentoria_comment_create($feedbackmentoria_id, $teacher_id, $stu
     
     return array(
         'id' => $id,
-        'comment' => $comment,
+        'comment' => nl2br($comment),
         'date' => date('d/m/Y H:i', $data->timecreated),
         'user_send' => $user_send->firstname . ' ' . $user_send->lastname
     );

@@ -15,8 +15,13 @@ td, th {
   padding: 8px;
 }
 
-tr:nth-child(even) {
+tr:hover {
   background-color: #dddddd;
+}
+
+.date {
+	font-size: 10px;
+	color: #333333;
 }
 
 .form-control {

@@ -77,7 +77,7 @@ function getListActions() {
 	    	
 	    	html += ('<tr>');
 	    	
-	    	html += ('<td>');
+	    	html += ('<td width="5%">');
 	    	html += ('<input onClick="setChecked($(this))" type="checkbox" ' + (value.is_checked == 1 ? 'checked' : '') + ' value="' + value.id + '"/>');
 	    	html += ('</td>');
 
@@ -85,8 +85,8 @@ function getListActions() {
 	    	html += (value.name);
 	    	html += ('</td>');
 
-	    	html += ('<td>');
-	    	html += ('<button class="btn btn-danger btn-remover">x</button>');
+	    	html += ('<td width="20%">');
+	    	html += ('<div class="btn-remover" onClick="removeAction($(this))"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
 	    	html += ('</td>');
 
 	    	html += ('</tr>');
@@ -103,15 +103,19 @@ function getListActions() {
 
 }
 
-function setAction() {
+function setAction(button) {
 
-	let name = $('input[name="action-name"]').val();
+	const input = $('input[name="action-name"]');
+
+	let name = input.val();
 
 	if(!name) {
 		alert('Preencha o campo "Adicionar ações".')
 		return;
 	}
 	
+	button.attr('disabled', true);
+
 	let el = $('.acoes .panel-body .overflow');
 
 	$.ajax('ajax.php', { 
@@ -130,7 +134,7 @@ function setAction() {
 
 		html += ('<tr>');
 	    	
-    	html += ('<td>');
+    	html += ('<td width="5">');
     	html += ('<input onClick="setChecked($(this))" type="checkbox" ' + (data.action.is_checked == 1 ? 'checked' : '') + ' value="' + data.action.id + '"/>');
     	html += ('</td>');
 
@@ -138,16 +142,19 @@ function setAction() {
     	html += (data.action.name);
     	html += ('</td>');
 
-    	html += ('<td>');
-    	html += ('<button class="btn btn-danger btn-remover">x</button>');
+    	html += ('<td width="20">');
+    	html += ('<div class="btn-remover" onClick="removeAction($(this))"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
     	html += ('</td>');
 
     	html += ('</tr>');
 
 		el.find('table tbody').append(html)
 
+		input.val('');
+
 	}).fail(function() {
 	}).always(function() {
+		button.attr('disabled', false);
 	});
 
 }
@@ -166,6 +173,31 @@ function setChecked(el) {
 	}).done(function() {				
 	}).fail(function() {
 	}).always(function() {
+	});
+
+}
+
+function removeAction(el) {
+
+	if(!confirm('Tem a certeza de que pretende apagar essa ação?')) {
+		return;
+	}
+
+	var parents = el.parents('tr');
+	var action_id = parents.find('input[value]').val();
+	
+	$.ajax('ajax.php', { 
+		data: { 
+			action: 'remove_action',
+			id: __id,
+			action_id: action_id
+		},
+		type: 'post',
+		dataType: 'json'
+	}).done(function() {
+	}).fail(function() {
+	}).always(function() {
+		parents.remove();
 	});
 
 }

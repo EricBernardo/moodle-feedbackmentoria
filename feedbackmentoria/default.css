@@ -114,7 +114,7 @@ tr:nth-child(even) {
 
 .overflow {
 	overflow-y: scroll;
-	height: 400px;
+	max-height: 400px;
 }
 
 .feedback, .acoes {
@@ -122,12 +122,8 @@ tr:nth-child(even) {
 	float: left; 	
 }
 
-.acoes .btn-remover {
-	float: right;
-    width: 25px;
-    margin-left: 10px;
-    height: 25px;
-    padding: 0;
+.btn-remover {
+	cursor: pointer;
 }
 
 .feedback .overflow p {

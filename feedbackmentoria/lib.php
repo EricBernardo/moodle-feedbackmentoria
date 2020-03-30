@@ -189,11 +189,30 @@ function feedbackmentoria_action_add($feedbackmentoria_id, $teacher, $student, $
     );
 }
 
+function feedbackmentoria_action_remove($action_id) {
+    global $DB;
+
+    $exists = $DB->get_record('feedbackmentoria_actions', array('id' => $action_id));
+    if (!$exists) {
+        return false;
+    }
+
+    $DB->delete_records('feedbackmentoria_actions', array('id' => $action_id));
+
+    return true;
+}
+
 function feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checked) {
     global $DB;
+    
     $data->id = $feedbackmentoria_action_id;
     $data->is_checked = $is_checked;
-    $DB->update_record('feedbackmentoria_actions', $data);
+    
+    if($DB->update_record('feedbackmentoria_actions', $data)) {
+        return true;
+    }
+
+    return false;
 }
 
 function dd($var, $die = true) {

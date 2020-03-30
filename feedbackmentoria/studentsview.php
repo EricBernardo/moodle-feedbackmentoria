@@ -26,7 +26,7 @@
 	  	<div class="form-submit">
 	  		<label>Adicionar ações</label>
 			<input type="text" name="action-name" />
-			<input type="button" class="btn btn-default" onClick="setAction()" value="Adicionar" />
+			<input type="button" class="btn btn-default" onClick="setAction($(this))" value="Adicionar" />
 		</div>
 	  </div>
 	</div>

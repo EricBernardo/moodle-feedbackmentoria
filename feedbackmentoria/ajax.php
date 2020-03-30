@@ -57,36 +57,45 @@ header('Content-Type: text/html; charset=utf-8');
 switch ($action) {
     
     case 'actions':
-        $teacher = required_param('teacher_id', PARAM_ALPHANUM);
-        $student = required_param('student_id', PARAM_ALPHANUM);
-        $actions = feedbackmentoria_get_actions($feedbackmentoria->id, $teacher, $student);
-        $actions = feedbackmentoria_format_actionlist($actions);
-        $response['actions'] = $actions;
+        $teacher_id = required_param('teacher_id', PARAM_ALPHANUM);
+        $student_id = required_param('student_id', PARAM_ALPHANUM);
+        $actions = feedbackmentoria_get_actions($feedbackmentoria->id, $teacher_id, $student_id);        
+        $response['actions'] = feedbackmentoria_format_actionlist($actions);
         echo json_encode($response);
     break;
 
     case 'set_action':
-        $teacher = required_param('teacher_id', PARAM_ALPHANUM);
-        $student = required_param('student_id', PARAM_ALPHANUM);
+        $teacher_id = required_param('teacher_id', PARAM_ALPHANUM);
+        $student_id = required_param('student_id', PARAM_ALPHANUM);
         $name    = required_param('name', PARAM_TEXT);
-        $action = feedbackmentoria_action_add($feedbackmentoria->id, $teacher, $student, $name);
-        $response['action'] = $action;
+        $response['action'] = feedbackmentoria_action_add($feedbackmentoria->id, $teacher_id, $student_id, $name);;
         echo json_encode($response);
+    break;
+
+    case 'remove_action':
+        $action_id = required_param('action_id', PARAM_ALPHANUM);
+        $result = feedbackmentoria_action_remove($action_id);
+        if($result) {
+            die(json_encode(['success' => true, 'message' => 'Ação removida com sucesso']));
+        }
+        die(json_encode(['success' => false, 'message' => 'Ocorreu um erro. Tente novamente mais tarde']));
     break;
 
     case 'checked_action':
         $feedbackmentoria_action_id = required_param('feedbackmentoria_action_id', PARAM_ALPHANUM);
         $is_checked = required_param('is_checked', PARAM_ALPHANUM);
-        feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checked);
+        $result = feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checked);
+        if($result) {
+            die(json_encode(['success' => true, 'message' => 'Check com sucesso']));
+        }
+        die(json_encode(['success' => false, 'message' => 'Ocorreu um erro. Tente novamente mais tarde']));
     break;
 
     case 'options_filter':
         $students = feedbackmentoria_get($course->id, 'student');        
-        $students = feedbackmentoria_format_list($students);
-        $teachers = feedbackmentoria_get($course->id, 'teacher');        
-        $teachers = feedbackmentoria_format_list($teachers);
-        $response['students'] = $students;
-        $response['teachers'] = $teachers;
+        $teachers = feedbackmentoria_get($course->id, 'teacher');
+        $response['students'] = feedbackmentoria_format_list($students);
+        $response['teachers'] = feedbackmentoria_format_list($teachers);
         echo json_encode($response);
     break;
 

@@ -48,7 +48,7 @@ include($CFG->dirroot.'/mod/feedbackmentoria/detailsview.php');
 
 include($CFG->dirroot.'/mod/feedbackmentoria/filterview.php');
 
-include($CFG->dirroot.'/mod/feedbackmentoria/feedbackview.php');
+include($CFG->dirroot.'/mod/feedbackmentoria/commentsview.php');
 
 include($CFG->dirroot.'/mod/feedbackmentoria/actionsview.php');
 

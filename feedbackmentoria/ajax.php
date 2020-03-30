@@ -85,6 +85,22 @@ switch ($action) {
         die(json_encode(['success' => false, 'message' => 'Ocorreu um erro. Tente novamente mais tarde']));
     break;
 
+    case 'comments':
+        $teacher_id = required_param('teacher_id', PARAM_ALPHANUM);
+        $student_id = required_param('student_id', PARAM_ALPHANUM);
+        $comments = feedbackmentoria_comments($feedbackmentoria->id, $teacher_id, $student_id);        
+        $response['comments'] = feedbackmentoria_comments_list($comments);
+        echo json_encode($response);
+    break;
+
+    case 'comment_create':
+        $teacher_id = required_param('teacher_id', PARAM_ALPHANUM);
+        $student_id = required_param('student_id', PARAM_ALPHANUM);
+        $comment    = required_param('comment', PARAM_TEXT);
+        $response['comment'] = feedbackmentoria_comment_create($feedbackmentoria->id, $teacher_id, $student_id, $comment);
+        echo json_encode($response);
+    break;
+
     default:
         break;
 }

@@ -168,13 +168,47 @@ function feedbackmentoria_actions_list($actions) {
     return $result;
 }
 
-function feedbackmentoria_action_create($feedbackmentoria_id, $teacher, $student, $text) {
+function feedbackmentoria_comments($feedbackmentoria_id, $teacher, $student) {
+    global $DB;
+    
+    $sql = "
+        SELECT 
+            c.id, 
+            c.comment, 
+            c.timecreated,
+            concat(us.firstname, ' ', us.lastname) user_send
+        FROM mdl_feedbackmentoria_comments c
+        JOIN mdl_user us on us.id = c.user_send_id
+        ORDER BY
+            c.timecreated desc
+    ";
+
+    return $DB->get_records_sql($sql);
+
+}
+
+function feedbackmentoria_comments_list($comments) {
+    
+    $result = array();
+    foreach ($comments as $action) {
+        $item = array();
+        $item['id'] = $action->id;
+        $item['comment'] = $action->comment;
+        $item['user_send'] = $action->user_send;
+        $item['date'] = date('d/m/Y H:i', $action->timecreated);
+        $result[] = $item;
+    }
+    return $result;
+}
+
+function feedbackmentoria_action_create($feedbackmentoria_id, $teacher_id, $student_id, $name) {
     global $DB;
 
     $data->feedbackmentoria_id = $feedbackmentoria_id;
-    $data->teacher_id = $teacher;
-    $data->student_id = $student;
-    $data->name = $text;
+    $data->teacher_id = $teacher_id;
+    $data->student_id = $student_id;
+    $data->user_send_id = $USER->id;
+    $data->name = $name;
     $data->is_checked = 0;
     $data->timecreated = time();
     
@@ -212,6 +246,29 @@ function feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checke
 
     return false;
 }
+
+function feedbackmentoria_comment_create($feedbackmentoria_id, $teacher_id, $student_id, $comment) {
+    global $DB, $USER;
+
+    $data->feedbackmentoria_id = $feedbackmentoria_id;
+    $data->teacher_id = $teacher_id;
+    $data->student_id = $student_id;
+    $data->user_send_id = $USER->id;
+    $data->comment = $comment;
+    $data->timecreated = time();
+    
+    $id = $DB->insert_record('feedbackmentoria_comments', $data);
+
+    $user_send = $DB->get_record('user', array('id' => $data->user_send_id));
+    
+    return array(
+        'id' => $id,
+        'comment' => $comment,
+        'date' => date('d/m/Y H:i', $data->timecreated),
+        'user_send' => $user_send->firstname . ' ' . $user_send->lastname
+    );
+}
+
 
 function dd($var, $die = true) {
     echo '<pre>';

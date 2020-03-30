@@ -52,6 +52,7 @@ function getOptionsFilter() {
 
 function onSubmit() {
 	getActions();
+	getComments();
 }
 
 function getActions() {
@@ -110,6 +111,55 @@ function getActions() {
 
 }
 
+function getComments() {
+	
+	let count = $('.feedback .panel-body .overflow p').length;
+
+	let el = $('.feedback .panel-body .overflow');
+		
+	el.html('');
+
+	$.ajax('ajax.php', { 
+		data: { 
+			id: __id,
+			action: 'comments',
+			student_id: $('select[name="student"]').val(),
+			teacher_id: $('select[name="teacher"]').val(),
+			sesskey: M.cfg.sesskey
+		},
+		type: 'get',
+		dataType: 'json'
+	}).done(function(data) {
+
+		if(typeof(data.error) == 'string') {
+			setModal('Error', data.error, null, 'Fechar'); return;
+		}				
+		
+		let html = '';
+
+	    data.comments.map(function(value) {
+
+	    	if(count > 0) {
+		    	html += '<hr />';
+		    }
+
+			html += '<p>'
+				html +='<b>' + value.user_send + ' ' + value.date + '</b>';
+				html += value.comment;
+			html += '</p>'
+
+			count++;
+
+	    });
+
+	    el.html(html);
+
+	}).fail(function() {
+	}).always(function() {
+	});
+
+}
+
 function setModal(title, description, button1 = null, button2 = null) {
 	
 	const el = $('.modal');
@@ -137,9 +187,9 @@ function actionCreate() {
 	
 	const input = $('#form-action').find('input[name="action-name"]');
 
-	let name = input.val();
+	let value = input.val();
 
-	if(!name) {
+	if(!value) {
 		setModal('Atenção', 'Preencha o campo "Adicionar ações".', null, 'Fechar')
 		return;
 	}
@@ -152,7 +202,7 @@ function actionCreate() {
 			action: 'action_create',
 			student_id: $('select[name="student"]').val(),
 			teacher_id: $('select[name="teacher"]').val(),
-			name: name,
+			name: value,
 			sesskey: M.cfg.sesskey
 		},
 		type: 'post',
@@ -188,6 +238,45 @@ function actionCreate() {
 	}).fail(function() {
 	}).always(function() {
 		$('#form-action').find('input[type="submit"]').attr('disabled', false);
+	});
+
+}
+
+function commentCreate() {
+	
+	const textarea = $('#form-comment').find('textarea[name="comment"]');
+
+	let value = textarea.val();
+
+	if(!value) {
+		setModal('Atenção', 'Preencha o campo "Adicionar comentário".', null, 'Fechar')
+		return;
+	}
+	
+	$('#form-comment').find('input[type="submit"]').attr('disabled', true);
+
+	$.ajax('ajax.php', { 
+		data: { 
+			id: __id,
+			action: 'comment_create',
+			student_id: $('select[name="student"]').val(),
+			teacher_id: $('select[name="teacher"]').val(),
+			comment: value,
+			sesskey: M.cfg.sesskey
+		},
+		type: 'post',
+		dataType: 'json'
+	}).done(function(data) {
+
+		if(typeof(data.error) == 'string') {
+			setModal('Error', data.error, null, 'Fechar'); return;
+		}
+		
+		textarea.val('');
+
+	}).fail(function() {
+	}).always(function() {
+		$('#form-comment').find('input[type="submit"]').attr('disabled', false);
 	});
 
 }

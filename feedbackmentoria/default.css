@@ -112,14 +112,66 @@ tr:nth-child(even) {
 	border-bottom: 1px solid #ced4da;
 }
 
+.modal-header {
+	background: #51666c;
+}
+
+.modal-header {
+	background: #51666c;
+}
+
+.modal-header .close span {
+	color: #fff;
+}
+
+.modal-header .modal-title  {
+	color: #fff;
+}
+
 .overflow {
 	overflow-y: scroll;
 	max-height: 400px;
 }
 
+.form-submit input {
+	width: 70%;
+	float: left;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 35px;
+	border-radius: 3px;
+	border: 1px solid #ced4da;
+}
+
+.form-submit input[type=submit] {
+	width: 28%;
+    margin-left: 2%;
+    border-radius: 5px;
+}
+
+.form-submit label {
+	width: 100%;
+    float: left;
+    font-weight: bold;
+}
+
 .feedback, .acoes {
 	width: 100%;	
 	float: left; 	
+}
+
+.feedback input[type=submit] {
+	width: 28%;
+	float: right;
+	border-radius: 5px;
+}
+
+.feedback textarea {
+	width: 100%;
+	float: right;
+	min-height: 100px;
+	border-radius: 3px;
+    border: 1px solid #ced4da;
 }
 
 .btn-remover {
@@ -136,27 +188,6 @@ tr:nth-child(even) {
 	width: 100%;
 	float: left;
 	margin-bottom: 10px; 
-}
-
-.form-submit input {
-	width: 70%;
-	float: left;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	height: 35px;
-	border-radius: 3px;
-	border: 1px solid #ced4da;
-}
-
-.form-submit input[type=button] {
-	width: 28%;
-    margin-left: 2%;
-}
-
-.form-submit label {
-	width: 100%;
-    float: left;
-    font-weight: bold;
 }
 
 @media (max-width: 768px) {

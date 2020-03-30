@@ -114,10 +114,8 @@ function feedbackmentoria_users($course_id, $type) {
 
         if($role->shortname == 'student') {
             $where .= " AND u.id = {$USER->id}";
-        }
-
-        if($role->shortname == 'teacher') {
-            $where .= " AND r.shortname IN('student')";        
+        }else {
+            $where .= " AND r.shortname IN('student')";                
         }
 
     }

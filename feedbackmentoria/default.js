@@ -24,15 +24,18 @@ function getOptionsFilter() {
 	select_teacher.attr('disabled', true);
 
 	$.ajax('ajax.php', { 
-		data: { action: 'options_filter', id: __id },
+		data: { action: 'users_list', id: __id, sesskey: M.cfg.sesskey },
 		type: 'get',
 		dataType: 'json'
 	}).done(function(data) {
-				
+		
+		if(typeof(data.error) == 'string') {
+			setModal('Error', data.error, null, 'Fechar'); return;
+		}
+		 
 	    data.students.map(function(value) {
 	    	select_student.append('<option value="' + value.id + '">' + value.fullname + '</option>')
 	    });
-
 	    data.teachers.map(function(value) {
 	    	select_teacher.append('<option value="' + value.id + '">' + value.fullname + '</option>')
 	    });
@@ -40,7 +43,6 @@ function getOptionsFilter() {
 	    onSubmit();
 
 	}).fail(function() {
-	    // alert( "error" );
 	}).always(function() {
 	    select_student.attr('disabled', false);
 	    select_teacher.attr('disabled', false);
@@ -49,10 +51,10 @@ function getOptionsFilter() {
 }
 
 function onSubmit() {
-	getListActions();
+	getActions();
 }
 
-function getListActions() {
+function getActions() {
 	
 	let el = $('.acoes .panel-body .overflow');
 		
@@ -63,11 +65,16 @@ function getListActions() {
 			id: __id,
 			action: 'actions',
 			student_id: $('select[name="student"]').val(),
-			teacher_id: $('select[name="teacher"]').val()			
+			teacher_id: $('select[name="teacher"]').val(),
+			sesskey: M.cfg.sesskey
 		},
 		type: 'get',
 		dataType: 'json'
-	}).done(function(data) {				
+	}).done(function(data) {
+
+		if(typeof(data.error) == 'string') {
+			setModal('Error', data.error, null, 'Fechar'); return;
+		}				
 
 		let html = '';
 
@@ -77,8 +84,8 @@ function getListActions() {
 	    	
 	    	html += ('<tr>');
 	    	
-	    	html += ('<td width="5%">');
-	    	html += ('<input onClick="setChecked($(this))" type="checkbox" ' + (value.is_checked == 1 ? 'checked' : '') + ' value="' + value.id + '"/>');
+	    	html += ('<td width="2%">');
+	    	html += ('<input onClick="actionChecked($(this))" type="checkbox" ' + (value.is_checked == 1 ? 'checked' : '') + ' value="' + value.id + '"/>');
 	    	html += ('</td>');
 
 	    	html += ('<td>');
@@ -86,7 +93,7 @@ function getListActions() {
 	    	html += ('</td>');
 
 	    	html += ('<td width="20%">');
-	    	html += ('<div class="btn-remover" onClick="removeAction($(this))"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
+	    	html += ('<div class="btn-remover" onClick="confirmDelete(' + value.id + ')"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
 	    	html += ('</td>');
 
 	    	html += ('</tr>');
@@ -103,101 +110,139 @@ function getListActions() {
 
 }
 
-function setAction(button) {
+function setModal(title, description, button1 = null, button2 = null) {
+	
+	const el = $('.modal');
 
-	const input = $('input[name="action-name"]');
+	el.find('.modal-title').text(title);
+	el.find('.modal-body').text(description);
+
+	if(button1) {
+		el.find('.btn-primary').html(button1).show();
+	} else {
+		el.find('.btn-primary').hide();
+	}
+	
+	if(button2) {
+		el.find('.btn-secondary').html(button2).show();
+	} else {
+		el.find('.btn-secondary').hide();
+	}
+
+	el.modal()
+
+}
+
+function actionCreate(el) {
+
+	const input = el.parents('form').find('input[name="action-name"]');
 
 	let name = input.val();
 
 	if(!name) {
-		alert('Preencha o campo "Adicionar ações".')
+		setModal('Atenção', 'Preencha o campo "Adicionar ações".', null, 'Fechar')
 		return;
 	}
 	
-	button.attr('disabled', true);
-
-	let el = $('.acoes .panel-body .overflow');
+	el.attr('disabled', true);
 
 	$.ajax('ajax.php', { 
 		data: { 
 			id: __id,
-			action: 'set_action',
+			action: 'action_create',
 			student_id: $('select[name="student"]').val(),
 			teacher_id: $('select[name="teacher"]').val(),
-			name: name
+			name: name,
+			sesskey: M.cfg.sesskey
 		},
 		type: 'post',
 		dataType: 'json'
 	}).done(function(data) {
 
+		if(typeof(data.error) == 'string') {
+			setModal('Error', data.error, null, 'Fechar'); return;
+		}
+
 		let html = '';				
 
 		html += ('<tr>');
 	    	
-    	html += ('<td width="5">');
-    	html += ('<input onClick="setChecked($(this))" type="checkbox" ' + (data.action.is_checked == 1 ? 'checked' : '') + ' value="' + data.action.id + '"/>');
+    	html += ('<td width="2%">');
+    	html += ('<input onClick="actionChecked($(this))" type="checkbox" ' + (data.action.is_checked == 1 ? 'checked' : '') + ' value="' + data.action.id + '"/>');
     	html += ('</td>');
 
     	html += ('<td>');
     	html += (data.action.name);
     	html += ('</td>');
 
-    	html += ('<td width="20">');
-    	html += ('<div class="btn-remover" onClick="removeAction($(this))"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
+    	html += ('<td width="20%">');
+    	html += ('<div class="btn-remover" onClick="actionDelete($(this))"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
     	html += ('</td>');
 
     	html += ('</tr>');
 
-		el.find('table tbody').append(html)
+		$('.acoes .overflow').find('table tbody').append(html)
 
 		input.val('');
 
 	}).fail(function() {
 	}).always(function() {
-		button.attr('disabled', false);
+		el.attr('disabled', false);
 	});
 
 }
 
-function setChecked(el) {
+function actionChecked(el) {
+
+	el.attr('disabled', true);
 	
 	$.ajax('ajax.php', { 
 		data: { 
-			action: 'checked_action',
+			action: 'action_checked',
 			id: __id,
 			feedbackmentoria_action_id: el.val(),
-			is_checked: el.is(':checked') ? 1 : 0
+			is_checked: el.is(':checked') ? 1 : 0,
+			sesskey: M.cfg.sesskey
 		},
 		type: 'post',
 		dataType: 'json'
-	}).done(function() {				
+	}).done(function(data) {
+		if(typeof(data.error) == 'string') {
+			setModal('Error', data.error, null, 'Fechar'); return;
+		}
 	}).fail(function() {
 	}).always(function() {
+		el.attr('disabled', false);
 	});
 
 }
 
-function removeAction(el) {
+function confirmDelete(action_id) {
+	setModal('Atenção', 'Tem a certeza de que pretende apagar essa ação?', '<span onClick="actionDelete(' + action_id + '); $(\'.modal\').modal(\'hide\');">Sim</span>', 'Não');
+}
 
-	if(!confirm('Tem a certeza de que pretende apagar essa ação?')) {
-		return;
-	}
+function actionDelete(action_id) {
 
-	var parents = el.parents('tr');
+	var parents = $('.acoes [type="checkbox"][value="' + action_id + '"]').parents('tr');
 	var action_id = parents.find('input[value]').val();
 	
 	$.ajax('ajax.php', { 
 		data: { 
-			action: 'remove_action',
+			action: 'action_delete',
 			id: __id,
-			action_id: action_id
+			action_id: action_id,
+			sesskey: M.cfg.sesskey
 		},
 		type: 'post',
 		dataType: 'json'
-	}).done(function() {
+	}).done(function(data) {
+		if(typeof(data.error) == 'string') {
+			setModal('Error', data.error, null, 'Fechar'); return;
+		} else {
+			parents.remove();
+		}
 	}).fail(function() {
-	}).always(function() {
-		parents.remove();
+	}).always(function() {			
 	});
 
 }

@@ -1,31 +1,17 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 define('AJAX_SCRIPT', true);
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
-
 $action = required_param('action', PARAM_TEXT);
+
 $id = required_param('id', PARAM_ALPHANUM);
 
-// if (!confirm_sesskey()) {
-//     throw new moodle_exception('invalidsesskey', 'error');
-// }
+if (!confirm_sesskey()) {
+    throw new moodle_exception('invalidsesskey', 'error');
+}
 
 if (!$cm = get_coursemodule_from_id('feedbackmentoria', $id, 0, false, MUST_EXIST)) {
     throw new moodle_exception('invalidcoursemoduleid', 'error');
@@ -43,9 +29,9 @@ if (!$cm = get_coursemodule_from_instance('feedbackmentoria', $feedbackmentoria-
     throw new moodle_exception('invalidcoursemodule', 'error');
 }
 
-// if (!isloggedin()) {
-//     throw new moodle_exception('notlogged', 'feedbackmentoria');
-// }
+if (!isloggedin()) {
+    throw new moodle_exception('notlogged', 'feedbackmentoria');
+}
 
 ob_start();
 header('Expires: Sun, 28 Dec 1997 09:32:45 GMT');
@@ -55,33 +41,41 @@ header('Pragma: no-cache');
 header('Content-Type: text/html; charset=utf-8');
 
 switch ($action) {
+
+    case 'users_list':
+        $students = feedbackmentoria_users($course->id, 'student');        
+        $teachers = feedbackmentoria_users($course->id, 'teacher');
+        $response['students'] = feedbackmentoria_users_list($students);
+        $response['teachers'] = feedbackmentoria_users_list($teachers);
+        echo json_encode($response);
+    break;
     
     case 'actions':
         $teacher_id = required_param('teacher_id', PARAM_ALPHANUM);
         $student_id = required_param('student_id', PARAM_ALPHANUM);
-        $actions = feedbackmentoria_get_actions($feedbackmentoria->id, $teacher_id, $student_id);        
-        $response['actions'] = feedbackmentoria_format_actionlist($actions);
+        $actions = feedbackmentoria_actions($feedbackmentoria->id, $teacher_id, $student_id);        
+        $response['actions'] = feedbackmentoria_actions_list($actions);
         echo json_encode($response);
     break;
 
-    case 'set_action':
+    case 'action_create':
         $teacher_id = required_param('teacher_id', PARAM_ALPHANUM);
         $student_id = required_param('student_id', PARAM_ALPHANUM);
         $name    = required_param('name', PARAM_TEXT);
-        $response['action'] = feedbackmentoria_action_add($feedbackmentoria->id, $teacher_id, $student_id, $name);;
+        $response['action'] = feedbackmentoria_action_create($feedbackmentoria->id, $teacher_id, $student_id, $name);;
         echo json_encode($response);
     break;
 
-    case 'remove_action':
+    case 'action_delete':
         $action_id = required_param('action_id', PARAM_ALPHANUM);
-        $result = feedbackmentoria_action_remove($action_id);
+        $result = feedbackmentoria_action_delete($action_id);
         if($result) {
             die(json_encode(['success' => true, 'message' => 'Ação removida com sucesso']));
         }
         die(json_encode(['success' => false, 'message' => 'Ocorreu um erro. Tente novamente mais tarde']));
     break;
 
-    case 'checked_action':
+    case 'action_checked':
         $feedbackmentoria_action_id = required_param('feedbackmentoria_action_id', PARAM_ALPHANUM);
         $is_checked = required_param('is_checked', PARAM_ALPHANUM);
         $result = feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checked);
@@ -89,14 +83,6 @@ switch ($action) {
             die(json_encode(['success' => true, 'message' => 'Check com sucesso']));
         }
         die(json_encode(['success' => false, 'message' => 'Ocorreu um erro. Tente novamente mais tarde']));
-    break;
-
-    case 'options_filter':
-        $students = feedbackmentoria_get($course->id, 'student');        
-        $teachers = feedbackmentoria_get($course->id, 'teacher');
-        $response['students'] = feedbackmentoria_format_list($students);
-        $response['teachers'] = feedbackmentoria_format_list($teachers);
-        echo json_encode($response);
     break;
 
     default:

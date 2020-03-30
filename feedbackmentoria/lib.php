@@ -98,7 +98,7 @@ function feedbackmentoria_delete_instance($id) {
     return true;
 }
 
-function feedbackmentoria_get($p_courseid, $p_type) {
+function feedbackmentoria_users($course_id, $type) {
     global $DB, $USER;
 
     $where = '';
@@ -106,23 +106,23 @@ function feedbackmentoria_get($p_courseid, $p_type) {
     $roleassignment = $DB->get_record('role_assignments', ['userid' => $USER->id]);
     $role = $DB->get_record('role', ['id' => $roleassignment->roleid]);
 
-    if($role->shortname == 'student') {
+    if($type == 'teacher') {
+        $where .= " AND r.shortname IN('editingteacher', 'teacher')";//GESTOR: manager            
+    }
 
-        $where .= " AND u.id = {$USER->id}";
+    if($type == 'student') {
 
-    } else {
+        if($role->shortname == 'student') {
+            $where .= " AND u.id = {$USER->id}";
+        }
 
-        if($p_type == 'teacher') {
-            $where .= " AND r.shortname IN('editingteacher', 'teacher')";
+        if($role->shortname == 'teacher') {
+            $where .= " AND r.shortname IN('student')";        
         }
 
     }
 
-    if($p_type == 'student') {
-        $where .= " AND r.shortname IN('student')";
-    }
-
-    $contextid = get_context_instance(CONTEXT_COURSE, $p_courseid);
+    $contextid = get_context_instance(CONTEXT_COURSE, $course_id);
 
     $sql = "
         SELECT u.id, u.firstname, u.lastname
@@ -138,7 +138,7 @@ function feedbackmentoria_get($p_courseid, $p_type) {
     return $DB->get_records_sql($sql);
 }
 
-function feedbackmentoria_format_list($data) {
+function feedbackmentoria_users_list($data) {
     $result = array();
     foreach ($data as $user) {
         $item = array();
@@ -149,7 +149,7 @@ function feedbackmentoria_format_list($data) {
     return $result;
 }
 
-function feedbackmentoria_get_actions($feedbackmentoria_id, $teacher, $student) {
+function feedbackmentoria_actions($feedbackmentoria_id, $teacher, $student) {
     global $DB;
     
     $actions = $DB->get_records('feedbackmentoria_actions', array('feedbackmentoria_id' => $feedbackmentoria_id, 'student_id' => $student, 'teacher_id' => $teacher));
@@ -158,7 +158,7 @@ function feedbackmentoria_get_actions($feedbackmentoria_id, $teacher, $student) 
 
 }
 
-function feedbackmentoria_format_actionlist($actions) {
+function feedbackmentoria_actions_list($actions) {
     $result = array();
     foreach ($actions as $action) {
         $item = array();
@@ -170,7 +170,7 @@ function feedbackmentoria_format_actionlist($actions) {
     return $result;
 }
 
-function feedbackmentoria_action_add($feedbackmentoria_id, $teacher, $student, $text) {
+function feedbackmentoria_action_create($feedbackmentoria_id, $teacher, $student, $text) {
     global $DB;
 
     $data->feedbackmentoria_id = $feedbackmentoria_id;
@@ -189,7 +189,7 @@ function feedbackmentoria_action_add($feedbackmentoria_id, $teacher, $student, $
     );
 }
 
-function feedbackmentoria_action_remove($action_id) {
+function feedbackmentoria_action_delete($action_id) {
     global $DB;
 
     $exists = $DB->get_record('feedbackmentoria_actions', array('id' => $action_id));

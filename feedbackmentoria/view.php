@@ -1,26 +1,4 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * Prints an instance of mod_feedbackmentoria.
- *
- * @package     mod_feedbackmentoria
- * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
@@ -64,31 +42,11 @@ $PAGE->requires->css('/mod/feedbackmentoria/default.css?time=' . time());
 
 $PAGE->requires->js('/mod/feedbackmentoria/default.js?time=' . time());
 
-// var_dump($cm->id);
 echo $OUTPUT->header();
 
-echo '<h3><p>' . ($moduleinstance->name) . '</p></h3>';
-echo '<p>' . ($moduleinstance->intro) . '</p>';
+include($CFG->dirroot.'/mod/feedbackmentoria/detailsview.php');
 
-echo '
-	<p>
-		<form id="filter">
-
-			<div class="form-control select-teachers">
-    			<label>Professor</label>
-				<select class="select" name="teacher"></select>
-			</div>
-			<div class="form-control select-students">
-				<label>Aluno</label>
-				<select class="select" name="student"></select>
-			</div>
-			<div class="form-control button-filter">		
-				<input type="button" class="btn btn-default" onClick="onSubmit()" value="Pesquisar" />
-			</div>
-
-		</form>
-	</p>
-';
+include($CFG->dirroot.'/mod/feedbackmentoria/filterview.php');
 /*
 echo '
 	<div class="feedback">
@@ -127,35 +85,10 @@ echo '
 		</div>
 	</div>
 ';
-
-echo '
-	<div class="acoes">
-		<div class="panel panel-default">
-		  <div class="panel-heading">Ações</div>
-		  <div class="panel-body">
-		  	<div class="overflow">
-				<div class="checkbox">
-					<label><input type="checkbox" value="">Lorem ipsum dolor 1</label>
-				</div>
-				<div class="checkbox">
-					<label><input type="checkbox" value="">Lorem ipsum dolor 2</label>
-				</div>
-				<div class="checkbox">
-					<label><input type="checkbox" value="" checked>Lorem ipsum dolor 3</label>
-				</div>
-		  	</div>
-		  	<hr/>
-		  	<div class="form-submit">
-		  		<label>Adicionar ações</label>
-				<textarea></textarea>
-				<input type="submit" />
-			</div>
-		  </div>
-		</div>
-	</div>
-';
 */
 
 include($CFG->dirroot.'/mod/feedbackmentoria/studentsview.php');
+
+include($CFG->dirroot.'/mod/feedbackmentoria/modalview.php');
 
 echo $OUTPUT->footer();

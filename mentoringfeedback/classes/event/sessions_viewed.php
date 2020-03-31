@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_feedbackmentoria sessions viewed event.
+ * The mod_mentoringfeedback sessions viewed event.
  *
- * @package    mod_feedbackmentoria
+ * @package    mod_mentoringfeedback
  * @copyright  2013 Frédéric Massart
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_feedbackmentoria\event;
+namespace mod_mentoringfeedback\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_feedbackmentoria sessions viewed event class.
+ * The mod_mentoringfeedback sessions viewed event class.
  *
  * @property-read array $other {
  *      Extra information about the event.
@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  *      - int end: end of period.
  * }
  *
- * @package    mod_feedbackmentoria
+ * @package    mod_mentoringfeedback
  * @since      Moodle 2.6
  * @copyright  2013 Frédéric Massart
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -48,7 +48,7 @@ class sessions_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has viewed the sessions of the feedbackmentoria with course module id
+        return "The user with id '$this->userid' has viewed the sessions of the mentoringfeedback with course module id
             '$this->contextinstanceid'.";
     }
 
@@ -58,7 +58,7 @@ class sessions_viewed extends \core\event\base {
      * @return array|null
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'feedbackmentoria', 'report', 'report.php?id=' . $this->contextinstanceid,
+        return array($this->courseid, 'mentoringfeedback', 'report', 'report.php?id=' . $this->contextinstanceid,
             $this->objectid, $this->contextinstanceid);
     }
 
@@ -68,7 +68,7 @@ class sessions_viewed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventsessionsviewed', 'mod_feedbackmentoria');
+        return get_string('eventsessionsviewed', 'mod_mentoringfeedback');
     }
 
     /**
@@ -77,7 +77,7 @@ class sessions_viewed extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/feedbackmentoria/report.php', array('id' => $this->contextinstanceid));
+        return new \moodle_url('/mod/mentoringfeedback/report.php', array('id' => $this->contextinstanceid));
     }
 
     /**
@@ -88,7 +88,7 @@ class sessions_viewed extends \core\event\base {
     protected function init() {
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_OTHER;
-        $this->data['objecttable'] = 'feedbackmentoria';
+        $this->data['objecttable'] = 'mentoringfeedback';
     }
 
     /**
@@ -108,7 +108,7 @@ class sessions_viewed extends \core\event\base {
     }
 
     public static function get_objectid_mapping() {
-        return array('db' => 'feedbackmentoria', 'restore' => 'feedbackmentoria');
+        return array('db' => 'mentoringfeedback', 'restore' => 'mentoringfeedback');
     }
 
     public static function get_other_mapping() {

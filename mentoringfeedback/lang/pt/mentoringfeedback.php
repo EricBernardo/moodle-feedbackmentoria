@@ -15,17 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Plugin strings are defined here.
  *
- * @package     mod_feedbackmentoria
+ * @package     mod_mentoringfeedback
+ * @category    string
  * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_feedbackmentoria';
-$plugin->release = '0.1.0';
-$plugin->version = 2020032500;
-$plugin->requires = 2019052000;
-$plugin->maturity = MATURITY_ALPHA;
+$string['pluginname'] = 'Mentoria Feedback';
+$string['modulename'] = 'Mentoria Feedback';
+
+$string['mentoringfeedbackname'] = 'Nome';
+$string['mentoringfeedbacksettings'] = 'Configurações do Mentoria Feedback';
+$string['mentoringfeedbackfieldset'] = 'Campos do Mentoria Feedback';
+$string['pluginadministration'] = 'Administração do Mentoria Feedback';

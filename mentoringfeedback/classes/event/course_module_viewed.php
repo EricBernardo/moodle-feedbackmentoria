@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_feedbackmentoria course module viewed event.
+ * The mod_mentoringfeedback course module viewed event.
  *
- * @package    mod_feedbackmentoria
+ * @package    mod_mentoringfeedback
  * @copyright  2014 Petr Skoda
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_feedbackmentoria\event;
+namespace mod_mentoringfeedback\event;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_feedbackmentoria course module viewed event class.
+ * The mod_mentoringfeedback course module viewed event class.
  *
- * @package    mod_feedbackmentoria
+ * @package    mod_mentoringfeedback
  * @since      Moodle 2.7
  * @copyright  2014 Petr Skoda
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -38,10 +38,10 @@ class course_module_viewed extends \core\event\course_module_viewed {
     protected function init() {
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-        $this->data['objecttable'] = 'feedbackmentoria';
+        $this->data['objecttable'] = 'mentoringfeedback';
     }
 
     public static function get_objectid_mapping() {
-        return array('db' => 'feedbackmentoria', 'restore' => 'feedbackmentoria');
+        return array('db' => 'mentoringfeedback', 'restore' => 'mentoringfeedback');
     }
 }

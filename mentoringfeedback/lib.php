@@ -17,7 +17,7 @@
 /**
  * Library of interface functions and constants.
  *
- * @package     mod_feedbackmentoria
+ * @package     mod_mentoringfeedback
  * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $feature Constant representing the feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
-function feedbackmentoria_supports($feature) {
+function mentoringfeedback_supports($feature) {
     switch ($feature) {
         case FEATURE_MOD_INTRO:
             return true;
@@ -40,65 +40,65 @@ function feedbackmentoria_supports($feature) {
 }
 
 /**
- * Saves a new instance of the mod_feedbackmentoria into the database.
+ * Saves a new instance of the mod_mentoringfeedback into the database.
  *
  * Given an object containing all the necessary data, (defined by the form
  * in mod_form.php) this function will create a new instance and return the id
  * number of the instance.
  *
  * @param object $moduleinstance An object from the form.
- * @param mod_feedbackmentoria_mod_form $mform The form.
+ * @param mod_mentoringfeedback_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function feedbackmentoria_add_instance($moduleinstance, $mform = null) {
+function mentoringfeedback_add_instance($moduleinstance, $mform = null) {
     global $DB;
 
     $moduleinstance->timecreated = time();
 
-    $id = $DB->insert_record('feedbackmentoria', $moduleinstance);
+    $id = $DB->insert_record('mentoringfeedback', $moduleinstance);
 
     return $id;
 }
 
 /**
- * Updates an instance of the mod_feedbackmentoria in the database.
+ * Updates an instance of the mod_mentoringfeedback in the database.
  *
  * Given an object containing all the necessary data (defined in mod_form.php),
  * this function will update an existing instance with new data.
  *
  * @param object $moduleinstance An object from the form in mod_form.php.
- * @param mod_feedbackmentoria_mod_form $mform The form.
+ * @param mod_mentoringfeedback_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function feedbackmentoria_update_instance($moduleinstance, $mform = null) {
+function mentoringfeedback_update_instance($moduleinstance, $mform = null) {
     global $DB;
 
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
 
-    return $DB->update_record('feedbackmentoria', $moduleinstance);
+    return $DB->update_record('mentoringfeedback', $moduleinstance);
 }
 
 /**
- * Removes an instance of the mod_feedbackmentoria from the database.
+ * Removes an instance of the mod_mentoringfeedback from the database.
  *
  * @param int $id Id of the module instance.
  * @return bool True if successful, false on failure.
  */
-function feedbackmentoria_delete_instance($id) {
+function mentoringfeedback_delete_instance($id) {
     global $DB;
 
-    $exists = $DB->get_record('feedbackmentoria', array('id' => $id));
+    $exists = $DB->get_record('mentoringfeedback', array('id' => $id));
     if (!$exists) {
         return false;
     }
 
-    $DB->delete_records('feedbackmentoria', array('id' => $id));
+    $DB->delete_records('mentoringfeedback', array('id' => $id));
 
     return true;
 }
 
-function feedbackmentoria_users($course_id, $type) {
+function mentoringfeedback_users($course_id, $type) {
     global $DB, $USER;
 
     $where = '';
@@ -136,7 +136,7 @@ function feedbackmentoria_users($course_id, $type) {
     return $DB->get_records_sql($sql);
 }
 
-function feedbackmentoria_users_list($data) {
+function mentoringfeedback_users_list($data) {
     $result = array();
     foreach ($data as $user) {
         $item = array();
@@ -147,16 +147,16 @@ function feedbackmentoria_users_list($data) {
     return $result;
 }
 
-function feedbackmentoria_actions($feedbackmentoria_id, $teacher, $student) {
+function mentoringfeedback_actions($mentoringfeedback_id, $teacher, $student) {
     global $DB;
     
-    $actions = $DB->get_records('feedbackmentoria_actions', array('feedbackmentoria_id' => $feedbackmentoria_id, 'student_id' => $student, 'teacher_id' => $teacher));
+    $actions = $DB->get_records('mentoringfeedback_actions', array('mentoringfeedback_id' => $mentoringfeedback_id, 'student_id' => $student, 'teacher_id' => $teacher));
 
     return $actions;
 
 }
 
-function feedbackmentoria_actions_list($actions) {
+function mentoringfeedback_actions_list($actions) {
     $result = array();
     foreach ($actions as $action) {
         $item = array();
@@ -168,20 +168,21 @@ function feedbackmentoria_actions_list($actions) {
     return $result;
 }
 
-function feedbackmentoria_comments($feedbackmentoria_id, $teacher_id, $student_id) {
+function mentoringfeedback_messages($mentoringfeedback_id, $teacher_id, $student_id) {
     global $DB;
     
     $sql = "
         SELECT 
             c.id, 
-            c.comment, 
+            c.message, 
             c.timecreated,
+            c.attachment,
             concat(us.firstname, ' ', us.lastname) user_send
-        FROM mdl_feedbackmentoria_comments c
+        FROM mdl_mentoringfeedback_messages c
         JOIN mdl_user us on us.id = c.user_send_id
         WHERE c.teacher_id = {$teacher_id}
         AND c.student_id = {$student_id}
-        AND c.feedbackmentoria_id = {$feedbackmentoria_id}
+        AND c.mentoringfeedback_id = {$mentoringfeedback_id}
         ORDER BY
             c.timecreated asc
     ";
@@ -190,24 +191,25 @@ function feedbackmentoria_comments($feedbackmentoria_id, $teacher_id, $student_i
 
 }
 
-function feedbackmentoria_comments_list($comments) {
-    
+function mentoringfeedback_messages_list($messages) {
+    global $CFG;    
     $result = array();
-    foreach ($comments as $action) {
+    foreach ($messages as $message) {
         $item = array();
-        $item['id'] = $action->id;
-        $item['comment'] = nl2br($action->comment);
-        $item['user_send'] = $action->user_send;
-        $item['date'] = date('d/m/Y H:i', $action->timecreated);
+        $item['id'] = $message->id;
+        $item['message'] = nl2br($message->message);
+        $item['user_send'] = $message->user_send;
+        $item['attachment'] = $message->attachment ? $CFG->wwwroot . '/mod/mentoringfeedback/uploads/' . $message->attachment : null;
+        $item['date'] = date('d/m/Y H:i', $message->timecreated);
         $result[] = $item;
     }
     return $result;
 }
 
-function feedbackmentoria_action_create($feedbackmentoria_id, $teacher_id, $student_id, $name) {
+function mentoringfeedback_action_create($mentoringfeedback_id, $teacher_id, $student_id, $name) {
     global $DB;
 
-    $data->feedbackmentoria_id = $feedbackmentoria_id;
+    $data->mentoringfeedback_id = $mentoringfeedback_id;
     $data->teacher_id = $teacher_id;
     $data->student_id = $student_id;
     $data->user_send_id = $USER->id;
@@ -215,7 +217,7 @@ function feedbackmentoria_action_create($feedbackmentoria_id, $teacher_id, $stud
     $data->is_checked = 0;
     $data->timecreated = time();
     
-    $id = $DB->insert_record('feedbackmentoria_actions', $data);
+    $id = $DB->insert_record('mentoringfeedback_actions', $data);
     
     return array(
         'id' => $id,
@@ -224,51 +226,65 @@ function feedbackmentoria_action_create($feedbackmentoria_id, $teacher_id, $stud
     );
 }
 
-function feedbackmentoria_action_delete($action_id) {
+function mentoringfeedback_action_delete($action_id) {
     global $DB;
 
-    $exists = $DB->get_record('feedbackmentoria_actions', array('id' => $action_id));
+    $exists = $DB->get_record('mentoringfeedback_actions', array('id' => $action_id));
     if (!$exists) {
         return false;
     }
 
-    $DB->delete_records('feedbackmentoria_actions', array('id' => $action_id));
+    $DB->delete_records('mentoringfeedback_actions', array('id' => $action_id));
 
     return true;
 }
 
-function feedbackmentoria_action_checked($feedbackmentoria_action_id, $is_checked) {
+function mentoringfeedback_action_checked($mentoringfeedback_action_id, $is_checked) {
     global $DB;
     
-    $data->id = $feedbackmentoria_action_id;
+    $data->id = $mentoringfeedback_action_id;
     $data->is_checked = $is_checked;
     
-    if($DB->update_record('feedbackmentoria_actions', $data)) {
+    if($DB->update_record('mentoringfeedback_actions', $data)) {
         return true;
     }
 
     return false;
 }
 
-function feedbackmentoria_comment_create($feedbackmentoria_id, $teacher_id, $student_id, $comment) {
-    global $DB, $USER;
+function mentoringfeedback_message_create($mentoringfeedback_id, $teacher_id, $student_id, $message) {
+    global $DB, $USER, $CFG;
 
-    $data->feedbackmentoria_id = $feedbackmentoria_id;
+    $data->mentoringfeedback_id = $mentoringfeedback_id;
     $data->teacher_id = $teacher_id;
     $data->student_id = $student_id;
     $data->user_send_id = $USER->id;
-    $data->comment = $comment;
+    $data->message = $message;    
     $data->timecreated = time();
+    $data->attachment = null;
+
+    if(isset($_FILES['file']['name'])) {
+
+        $file_name = md5($data->timecreated . '-' . $USER->id) . '-' . basename($_FILES['file']['name']);
+        
+        $uploadfile = './uploads/' . $file_name;
+
+        if(move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+            $data->attachment = $file_name;
+        }
+
+    }
     
-    $id = $DB->insert_record('feedbackmentoria_comments', $data);
+    $id = $DB->insert_record('mentoringfeedback_messages', $data);
 
     $user_send = $DB->get_record('user', array('id' => $data->user_send_id));
     
     return array(
         'id' => $id,
-        'comment' => nl2br($comment),
+        'message' => nl2br($message),
         'date' => date('d/m/Y H:i', $data->timecreated),
-        'user_send' => $user_send->firstname . ' ' . $user_send->lastname
+        'user_send' => $user_send->firstname . ' ' . $user_send->lastname,
+        'attachment' =>  $data->attachment ? $CFG->wwwroot . '/mod/mentoringfeedback/uploads/' . $data->attachment : null
     );
 }
 

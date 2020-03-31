@@ -15,20 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code to be executed after the plugin's database scheme has been installed is defined here.
+ * The mod_mentoringfeedback instance list viewed event.
  *
- * @package     mod_feedbackmentoria
- * @category    upgrade
- * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_mentoringfeedback
+ * @copyright  2013 onwards Ankit Agarwal
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_mentoringfeedback\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Custom code to be run on installing the plugin.
+ * The mod_mentoringfeedback instance list viewed event class.
+ *
+ * @package    mod_mentoringfeedback
+ * @since      Moodle 2.7
+ * @copyright  2013 onwards Ankit Agarwal
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_feedbackmentoria_install() {
-
-    return true;
+class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
 }
+

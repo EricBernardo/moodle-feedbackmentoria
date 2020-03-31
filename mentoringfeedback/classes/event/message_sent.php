@@ -15,20 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_feedbackmentoria message sent event.
+ * The mod_mentoringfeedback message sent event.
  *
- * @package    mod_feedbackmentoria
+ * @package    mod_mentoringfeedback
  * @copyright  2013 Frédéric Massart
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_feedbackmentoria\event;
+namespace mod_mentoringfeedback\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_feedbackmentoria message sent event class.
+ * The mod_mentoringfeedback message sent event class.
  *
- * @package    mod_feedbackmentoria
+ * @package    mod_mentoringfeedback
  * @since      Moodle 2.6
  * @copyright  2013 Frédéric Massart
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -41,7 +41,7 @@ class message_sent extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->relateduserid' has sent a message in the feedbackmentoria with course module id
+        return "The user with id '$this->relateduserid' has sent a message in the mentoringfeedback with course module id
             '$this->contextinstanceid'.";
     }
 
@@ -51,9 +51,9 @@ class message_sent extends \core\event\base {
      * @return array
      */
     protected function get_legacy_logdata() {
-        $message = $this->get_record_snapshot('feedbackmentoria_messages', $this->objectid);
-        return array($this->courseid, 'feedbackmentoria', 'talk', 'view.php?id=' . $this->contextinstanceid,
-            $message->feedbackmentoriaid, $this->contextinstanceid, $this->relateduserid);
+        $message = $this->get_record_snapshot('mentoringfeedback_messages', $this->objectid);
+        return array($this->courseid, 'mentoringfeedback', 'talk', 'view.php?id=' . $this->contextinstanceid,
+            $message->mentoringfeedbackid, $this->contextinstanceid, $this->relateduserid);
     }
 
     /**
@@ -62,7 +62,7 @@ class message_sent extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventmessagesent', 'mod_feedbackmentoria');
+        return get_string('eventmessagesent', 'mod_mentoringfeedback');
     }
 
     /**
@@ -71,7 +71,7 @@ class message_sent extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/feedbackmentoria/view.php', array('id' => $this->contextinstanceid));
+        return new \moodle_url('/mod/mentoringfeedback/view.php', array('id' => $this->contextinstanceid));
     }
 
     /**
@@ -82,7 +82,7 @@ class message_sent extends \core\event\base {
     protected function init() {
         $this->data['crud'] = 'c';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-        $this->data['objecttable'] = 'feedbackmentoria_messages';
+        $this->data['objecttable'] = 'mentoringfeedback_messages';
     }
 
     /**
@@ -99,6 +99,6 @@ class message_sent extends \core\event\base {
     }
 
     public static function get_objectid_mapping() {
-        return array('db' => 'feedbackmentoria_messages', 'restore' => 'feedbackmentoria_message');
+        return array('db' => 'mentoringfeedback_messages', 'restore' => 'mentoringfeedback_message');
     }
 }

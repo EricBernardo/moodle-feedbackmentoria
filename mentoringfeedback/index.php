@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display information about all the mod_feedbackmentoria modules in the requested course.
+ * Display information about all the mod_mentoringfeedback modules in the requested course.
  *
- * @package     mod_feedbackmentoria
+ * @package     mod_mentoringfeedback
  * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,26 +33,26 @@ require_course_login($course);
 
 $coursecontext = context_course::instance($course->id);
 
-$event = \mod_feedbackmentoria\event\course_module_instance_list_viewed::create(array(
+$event = \mod_mentoringfeedback\event\course_module_instance_list_viewed::create(array(
     'context' => $modulecontext
 ));
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$PAGE->set_url('/mod/feedbackmentoria/index.php', array('id' => $id));
+$PAGE->set_url('/mod/mentoringfeedback/index.php', array('id' => $id));
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($coursecontext);
 
 echo $OUTPUT->header();
 
-$modulenameplural = get_string('modulenameplural', 'mod_feedbackmentoria');
+$modulenameplural = get_string('modulenameplural', 'mod_mentoringfeedback');
 echo $OUTPUT->heading($modulenameplural);
 
-$feedbackmentorias = get_all_instances_in_course('feedbackmentoria', $course);
+$mentoringfeedbacks = get_all_instances_in_course('mentoringfeedback', $course);
 
-if (empty($feedbackmentorias)) {
-    notice(get_string('nonewmodules', 'mod_feedbackmentoria'), new moodle_url('/course/view.php', array('id' => $course->id)));
+if (empty($mentoringfeedbacks)) {
+    notice(get_string('nonewmodules', 'mod_mentoringfeedback'), new moodle_url('/course/view.php', array('id' => $course->id)));
 }
 
 $table = new html_table();
@@ -69,20 +69,20 @@ if ($course->format == 'weeks') {
     $table->align = array('left', 'left', 'left');
 }
 
-foreach ($feedbackmentorias as $feedbackmentoria) {
-    if (!$feedbackmentoria->visible) {
+foreach ($mentoringfeedbacks as $mentoringfeedback) {
+    if (!$mentoringfeedback->visible) {
         $link = html_writer::link(
-            new moodle_url('/mod/feedbackmentoria/view.php', array('id' => $feedbackmentoria->coursemodule)),
-            format_string($feedbackmentoria->name, true),
+            new moodle_url('/mod/mentoringfeedback/view.php', array('id' => $mentoringfeedback->coursemodule)),
+            format_string($mentoringfeedback->name, true),
             array('class' => 'dimmed'));
     } else {
         $link = html_writer::link(
-            new moodle_url('/mod/feedbackmentoria/view.php', array('id' => $feedbackmentoria->coursemodule)),
-            format_string($feedbackmentoria->name, true));
+            new moodle_url('/mod/mentoringfeedback/view.php', array('id' => $mentoringfeedback->coursemodule)),
+            format_string($mentoringfeedback->name, true));
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array($feedbackmentoria->section, $link);
+        $table->data[] = array($mentoringfeedback->section, $link);
     } else {
         $table->data[] = array($link);
     }

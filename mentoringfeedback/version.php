@@ -15,24 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_feedbackmentoria instance list viewed event.
+ * Plugin version and other meta-data are defined here.
  *
- * @package    mod_feedbackmentoria
- * @copyright  2013 onwards Ankit Agarwal
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_mentoringfeedback
+ * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_feedbackmentoria\event;
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * The mod_feedbackmentoria instance list viewed event class.
- *
- * @package    mod_feedbackmentoria
- * @since      Moodle 2.7
- * @copyright  2013 onwards Ankit Agarwal
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
-}
-
+$plugin->component = 'mod_mentoringfeedback';
+$plugin->release = '0.1.0';
+$plugin->version = 2020032500;
+$plugin->requires = 2019052000;
+$plugin->maturity = MATURITY_ALPHA;

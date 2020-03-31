@@ -1,4 +1,4 @@
-<div class="acoes">
+<div class="actions">
 	<div class="panel panel-default">
 	  <div class="panel-heading">Ações</div>
 	  <div class="panel-body">

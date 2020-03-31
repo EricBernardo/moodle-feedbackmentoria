@@ -52,12 +52,12 @@ function getOptionsFilter() {
 
 function onSubmit() {
 	getActions();
-	getComments();
+	getMessages();
 }
 
 function getActions() {
 	
-	let el = $('.acoes .panel-body .overflow');
+	let el = $('.actions .panel-body .overflow');
 		
 	el.html('');
 
@@ -111,8 +111,8 @@ function getActions() {
 
 }
 
-function getComments() {
-	
+function getMessages() {
+
 	let count = $('.feedback .panel-body .overflow p').length;
 
 	let el = $('.feedback .panel-body .overflow');
@@ -122,7 +122,7 @@ function getComments() {
 	$.ajax('ajax.php', { 
 		data: { 
 			id: __id,
-			action: 'comments',
+			action: 'messages',
 			student_id: $('select[name="student"]').val(),
 			teacher_id: $('select[name="teacher"]').val(),
 			sesskey: M.cfg.sesskey
@@ -137,7 +137,7 @@ function getComments() {
 		
 		let html = '';
 
-	    data.comments.map(function(value) {
+	    data.messages.map(function(value) {
 
 	    	if(count > 0) {
 		    	html += '<hr />';
@@ -145,7 +145,10 @@ function getComments() {
 
 			html += '<p>'
 				html +='<b>' + value.user_send + ' <span class="date">(' + value.date + ')</span></b>';
-				html += value.comment;
+				html += value.message;
+				if(value.attachment) {
+					html += '<a target="_blank" class="attachment" href="' + value.attachment + '">Baixar Arquivo</a>'
+				}
 			html += '</p>'
 
 			count++;
@@ -233,7 +236,7 @@ function actionCreate() {
 
     	html += ('</tr>');
 
-		$('.acoes .overflow').find('table tbody').append(html)
+		$('.actions .overflow').find('table tbody').append(html)
 
 		input.val('');
 
@@ -244,11 +247,11 @@ function actionCreate() {
 
 }
 
-function commentCreate() {
+function messageCreate() {
 
 	let el = $('.feedback .panel-body .overflow');
 	
-	const textarea = $('#form-comment').find('textarea[name="comment"]');
+	const textarea = $('#form-message').find('textarea[name="message"]');
 
 	let value = textarea.val();
 
@@ -256,48 +259,64 @@ function commentCreate() {
 		setModal('Atenção', 'Preencha o campo "Adicionar comentário".', null, 'Fechar')
 		return;
 	}
-	
-	$('#form-comment').find('input[type="submit"]').attr('disabled', true);
 
-	$.ajax('ajax.php', { 
-		data: { 
-			id: __id,
-			action: 'comment_create',
-			student_id: $('select[name="student"]').val(),
-			teacher_id: $('select[name="teacher"]').val(),
-			comment: value,
-			sesskey: M.cfg.sesskey
-		},
-		type: 'post',
-		dataType: 'json'
-	}).done(function(data) {
+	var formData = new FormData($('#form-message')[0]);
 
-		if(typeof(data.error) == 'string') {
-			setModal('Error', data.error, null, 'Fechar'); return;
-		}
+	formData.append('action', 'message_create');
+	formData.append('id', __id);
+	formData.append('action', 'message_create');
+	formData.append('student_id', $('select[name="student"]').val());
+	formData.append('teacher_id', $('select[name="teacher"]').val());
+	formData.append('message', value);
+	formData.append('sesskey', M.cfg.sesskey);
 
-	    var html = '';
+    $.ajax({
+        url: 'ajax.php',
+        type: 'POST',
+        dataType: 'json',
+        data: formData,
+        success: function(data) {
+            
+			if(typeof(data.error) == 'string') {
+				setModal('Error', data.error, null, 'Fechar'); return;
+			}
 
-		if(el.find('p').length > 0) {
-	    	html += '<hr />';
-	    }
+		    var html = '';
 
-		html += '<p>'
-			html +='<b>' + data.comment.user_send + ' <span class="date">(' + data.comment.date + ')</span></b>';
-			html += data.comment.comment;
-		html += '</p>';
+			if(el.find('p').length > 0) {
+		    	html += '<hr />';
+		    }
 
-		el.append(html);
-		
-		textarea.val('');
+			html += '<p>'
+				html +='<b>' + data.message.user_send + ' <span class="date">(' + data.message.date + ')</span></b>';
+				html += data.message.message;
+				if(data.message.attachment) {
+					html += '<a target="_blank" class="attachment" href="' + data.message.attachment + '">Baixar Arquivo</a>'
+				}
+			html += '</p>';
 
-		scrollBottom(el);
+			el.append(html);
 
-	}).fail(function() {
-	}).always(function() {
-		$('#form-comment').find('input[type="submit"]').attr('disabled', false);
-	});
+			textarea.val('');
 
+			$('#file').val('');
+			uploadFile();
+
+			scrollBottom(el);
+        },
+        cache: false,
+        contentType: false,
+        processData: false,
+        xhr: function() {
+            var myXhr = $.ajaxSettings.xhr();
+            if (myXhr.upload) {
+                myXhr.upload.addEventListener('progress', function() {
+                }, false);
+            }
+            return myXhr;
+        }
+    });
+    
 }
 
 function actionChecked(el) {
@@ -308,7 +327,7 @@ function actionChecked(el) {
 		data: { 
 			action: 'action_checked',
 			id: __id,
-			feedbackmentoria_action_id: el.val(),
+			mentoringfeedback_action_id: el.val(),
 			is_checked: el.is(':checked') ? 1 : 0,
 			sesskey: M.cfg.sesskey
 		},
@@ -337,7 +356,7 @@ function confirmDelete(action_id) {
 
 function actionDelete(action_id) {
 
-	var parents = $('.acoes [type="checkbox"][value="' + action_id + '"]').parents('tr');
+	var parents = $('.actions [type="checkbox"][value="' + action_id + '"]').parents('tr');
 	var action_id = parents.find('input[value]').val();
 	
 	$.ajax('ajax.php', { 
@@ -363,6 +382,16 @@ function actionDelete(action_id) {
 
 function scrollBottom(el) {
 	el.scrollTop(el[0].scrollHeight);
+}
+
+function uploadFile() {
+	var el = $('#file');
+
+	if(el.val()) {
+		$('.custom-file .custom-file-label').text(el.val());
+	} else {
+		$('.custom-file .custom-file-label').text('Nenhum arquivo selecionado');
+	}
 }
 
 $(document).ready(function(){

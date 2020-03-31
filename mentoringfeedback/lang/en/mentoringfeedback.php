@@ -15,20 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code that is executed before the tables and data are dropped during the plugin uninstallation.
+ * Plugin strings are defined here.
  *
- * @package     mod_feedbackmentoria
- * @category    upgrade
+ * @package     mod_mentoringfeedback
+ * @category    string
  * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Custom uninstallation procedure.
- */
-function xmldb_feedbackmentoria_uninstall() {
+$string['pluginname'] = 'Mentoria Feedback';
+$string['modulename'] = 'Mentoria Feedback';
 
-    return true;
-}
+$string['mentoringfeedbackname'] = 'Nome';
+$string['mentoringfeedbacksettings'] = 'Configurações do Mentoria Feedback';
+$string['mentoringfeedbackfieldset'] = 'Campos do Mentoria Feedback';
+$string['pluginadministration'] = 'Administração do Mentoria Feedback';

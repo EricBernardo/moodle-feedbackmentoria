@@ -1,4 +1,4 @@
-# Feedback Mentoria #
+# Mentoria Feedback #
 
 TODO Describe the plugin shortly here.
 

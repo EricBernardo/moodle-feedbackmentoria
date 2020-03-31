@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The main mod_feedbackmentoria configuration form.
+ * The main mod_mentoringfeedback configuration form.
  *
- * @package     mod_feedbackmentoria
+ * @package     mod_mentoringfeedback
  * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,11 +29,11 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
 /**
  * Module instance settings form.
  *
- * @package    mod_feedbackmentoria
+ * @package    mod_mentoringfeedback
  * @copyright  2020 Eric Bernardo <eric.sousa@cwi.com.br>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_feedbackmentoria_mod_form extends moodleform_mod {
+class mod_mentoringfeedback_mod_form extends moodleform_mod {
 
     /**
      * Defines forms elements
@@ -47,7 +47,7 @@ class mod_feedbackmentoria_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         // Adding the standard "name" field.
-        $mform->addElement('text', 'name', get_string('feedbackmentorianame', 'mod_feedbackmentoria'), array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('mentoringfeedbackname', 'mod_mentoringfeedback'), array('size' => '64'));
 
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -57,7 +57,7 @@ class mod_feedbackmentoria_mod_form extends moodleform_mod {
 
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        $mform->addHelpButton('name', 'feedbackmentorianame', 'mod_feedbackmentoria');
+        $mform->addHelpButton('name', 'mentoringfeedbackname', 'mod_mentoringfeedback');
 
         // Adding the standard "intro" and "introformat" fields.
         if ($CFG->branch >= 29) {
@@ -66,10 +66,10 @@ class mod_feedbackmentoria_mod_form extends moodleform_mod {
             $this->add_intro_editor();
         }
 
-        // Adding the rest of mod_feedbackmentoria settings, spreading all them into this fieldset
+        // Adding the rest of mod_mentoringfeedback settings, spreading all them into this fieldset
         // ... or adding more fieldsets ('header' elements) if needed for better logic.
-        $mform->addElement('static', 'label1', 'feedbackmentoriasettings', get_string('feedbackmentoriasettings', 'mod_feedbackmentoria'));
-        $mform->addElement('header', 'feedbackmentoriafieldset', get_string('feedbackmentoriafieldset', 'mod_feedbackmentoria'));
+        $mform->addElement('static', 'label1', 'mentoringfeedbacksettings', get_string('mentoringfeedbacksettings', 'mod_mentoringfeedback'));
+        $mform->addElement('header', 'mentoringfeedbackfieldset', get_string('mentoringfeedbackfieldset', 'mod_mentoringfeedback'));
 
         // Add standard elements.
         $this->standard_coursemodule_elements();

@@ -135,7 +135,7 @@ tr:hover {
 
 .overflow {
 	overflow-y: scroll;
-	height: 400px;
+	max-height: 400px;
 }
 
 .form-submit input {
@@ -160,7 +160,7 @@ tr:hover {
     font-weight: bold;
 }
 
-.feedback, .acoes {
+.feedback, .actions {
 	width: 100%;	
 	float: left; 	
 }
@@ -195,6 +195,32 @@ tr:hover {
 	margin-bottom: 10px; 
 }
 
+.feedback .attachment {
+	font-weight: bold;
+    width: 100%;
+    float: left;
+    text-transform: uppercase;
+    margin-top: 10px;
+    color: #E91E63;
+    font-size: 12px;
+}
+
+.custom-file {
+	width: 100%;
+    float: right;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.custom-file .custom-file-input {
+    margin-top: 0px;
+}
+
+.custom-file-label::after {
+	content: "Escolher arquivo";
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
 
    .select-teachers,
@@ -213,7 +239,7 @@ tr:hover {
    .form-submit input[type=submit] {
 		width: 100%;
 		margin: 0px;
-		margin-top: 20px;
+		margin-top: 10px;
 	}
 
 }

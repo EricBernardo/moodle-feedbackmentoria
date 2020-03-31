@@ -15,20 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin strings are defined here.
+ * Code to be executed after the plugin's database scheme has been installed is defined here.
  *
- * @package     mod_feedbackmentoria
- * @category    string
+ * @package     mod_mentoringfeedback
+ * @category    upgrade
  * @copyright   2020 Eric Bernardo <eric.sousa@cwi.com.br>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Feedback Mentoria';
-$string['modulename'] = 'Feedback Mentoria';
+/**
+ * Custom code to be run on installing the plugin.
+ */
+function xmldb_mentoringfeedback_install() {
 
-$string['feedbackmentorianame'] = 'Nome';
-$string['feedbackmentoriasettings'] = 'Configurações do Feedback Mentoria';
-$string['feedbackmentoriafieldset'] = 'Campos do Feedback Mentoria';
-$string['pluginadministration'] = 'Administração do Feedback Mentoria';
+    return true;
+}

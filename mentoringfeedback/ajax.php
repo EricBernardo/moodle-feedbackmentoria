@@ -45,8 +45,8 @@ switch ($action) {
     case 'users_list':
         $students = mentoringfeedback_users($course->id, 'student');        
         $teachers = mentoringfeedback_users($course->id, 'teacher');
-        $response['students'] = mentoringfeedback_users_list($students);
         $response['teachers'] = mentoringfeedback_users_list($teachers);
+        $response['students'] = mentoringfeedback_users_list($students);
         echo json_encode($response);
     break;
     

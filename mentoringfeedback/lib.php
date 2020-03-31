@@ -122,22 +122,37 @@ function mentoringfeedback_users($course_id, $type) {
 
     $contextid = get_context_instance(CONTEXT_COURSE, $course_id);
 
+    $time = time();
+
     $sql = "
-        SELECT u.id, u.firstname, u.lastname
+        SELECT 
+            DISTINCT
+            u.id, 
+            u.firstname, 
+            u.lastname
         FROM mdl_user u
         JOIN mdl_role_assignments ra ON u.id = ra.userid
         JOIN mdl_role r ON r.id = ra.roleid
-        WHERE ra.contextid = {$contextid->id}
+        JOIN mdl_user_enrolments ue ON ue.userid = u.id
+        JOIN mdl_enrol e ON e.id = ue.enrolid
+        JOIN mdl_context ct ON ct.id = ra.contextid AND ct.contextlevel = 50
+        JOIN mdl_course c ON c.id = ct.instanceid AND e.courseid = c.id
+        WHERE e.status = 0 
+        AND u.suspended = 0 
+        AND u.deleted = 0
+        AND (ue.timeend = 0 OR ue.timeend > UNIX_TIMESTAMP(NOW()))
+        AND ue.status = 0
+        AND ra.contextid = {$contextid->id}
         $where
         ORDER BY
             u.firstname, u.lastname
     ";
-
+    
     return $DB->get_records_sql($sql);
 }
 
 function mentoringfeedback_users_list($data) {
-    $result = array();
+    $result = array();    
     foreach ($data as $user) {
         $item = array();
         $item['id'] = $user->id;

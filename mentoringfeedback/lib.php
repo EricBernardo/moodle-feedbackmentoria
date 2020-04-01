@@ -280,10 +280,16 @@ function mentoringfeedback_message_create($mentoringfeedback_id, $teacher_id, $s
 
     if(isset($_FILES['file']['name'])) {
 
+        $mb = number_format($_FILES['file']['size'] / 1048576, 2);
+
+        if($mb > 20) {
+            throw new moodle_exception('O arquivo ultrapassou o tamanho máximo de 20MB', 'Upload');
+        }
+
         $file_name = md5($data->timecreated . '-' . $USER->id) . '-' . basename($_FILES['file']['name']);
         
         $uploadfile = './uploads/' . $file_name;
-
+        
         if(move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
             $data->attachment = $file_name;
         }

@@ -59,7 +59,7 @@ function getActions() {
 	
 	let el = $('.actions .panel-body .overflow');
 		
-	el.html('');
+	el.html('Carregando...');
 
 	$.ajax('ajax.php', { 
 		data: { 
@@ -103,7 +103,9 @@ function getActions() {
 
 	    html += ('</tbody></table>');
 
-	    el.html(html);
+	    setTimeout(function(){
+	    	el.html(html);
+	    }, 1000);
 
 	}).fail(function() {
 	}).always(function() {
@@ -117,7 +119,7 @@ function getMessages() {
 
 	let el = $('.feedback .panel-body .overflow');
 		
-	el.html('');
+	el.html('Carregando...');
 
 	$.ajax('ajax.php', { 
 		data: { 
@@ -155,9 +157,10 @@ function getMessages() {
 
 	    });
 
-	    el.html(html);
-
-	    scrollBottom(el);
+	    setTimeout(function(){
+	    	el.html(html);
+	    	scrollBottom(el);
+	    }, 1000);
 
 	}).fail(function() {
 	}).always(function() {

@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Mentoria Feedback';
 $string['modulename'] = 'Mentoria Feedback';
+$string['modulenameplural'] = 'Mentorias Feedback';
 
 $string['mentoringfeedbackname'] = 'Nome';
 $string['mentoringfeedbacksettings'] = 'Configurações do Mentoria Feedback';

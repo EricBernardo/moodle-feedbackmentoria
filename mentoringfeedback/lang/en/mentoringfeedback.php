@@ -25,10 +25,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Mentoria Feedback';
-$string['modulename'] = 'Mentoria Feedback';
+$string['pluginname'] = 'Mentoring Feedback';
+$string['modulename'] = 'Mentoring Feedback';
+$string['modulenameplural'] = 'Mentorings Feedback';
 
-$string['mentoringfeedbackname'] = 'Nome';
-$string['mentoringfeedbacksettings'] = 'Configurações do Mentoria Feedback';
-$string['mentoringfeedbackfieldset'] = 'Campos do Mentoria Feedback';
-$string['pluginadministration'] = 'Administração do Mentoria Feedback';
+$string['mentoringfeedbackname'] = 'Name';
+$string['mentoringfeedbacksettings'] = 'Configuration in the Mentoring Feedback';
+$string['mentoringfeedbackfieldset'] = 'Fields in the Mentoring Feedback';
+$string['pluginadministration'] = 'Administration in the Mentoring Feedback';

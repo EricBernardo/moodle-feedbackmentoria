@@ -195,9 +195,9 @@ function mentoringfeedback_messages($mentoringfeedback_id, $teacher_id, $student
             concat(us.firstname, ' ', us.lastname) user_send
         FROM mdl_mentoringfeedback_messages c
         JOIN mdl_user us on us.id = c.user_send_id
-        WHERE c.teacher_id = {$teacher_id}
-        AND c.student_id = {$student_id}
-        AND c.mentoringfeedback_id = {$mentoringfeedback_id}
+        WHERE c.teacher_id = '{$teacher_id}'
+        AND c.student_id = '{$student_id}'
+        AND c.mentoringfeedback_id = '{$mentoringfeedback_id}'
         ORDER BY
             c.timecreated asc
     ";
@@ -280,10 +280,16 @@ function mentoringfeedback_message_create($mentoringfeedback_id, $teacher_id, $s
 
     if(isset($_FILES['file']['name'])) {
 
-        $mb = number_format($_FILES['file']['size'] / 1048576, 2);
+        $max_mb = round(get_config('moodlecourse', 'maxbytes') / 1048576, 1);
 
-        if($mb > 20) {
-            throw new moodle_exception('O arquivo ultrapassou o tamanho máximo de 20MB', 'Upload');
+        if(!$max_mb) {
+            $max_mb = 2;
+        }
+        
+        $mb = round($_FILES['file']['size'] / 1048576, 1);
+                
+        if($mb > $max_mb) {
+            throw new moodle_exception("O arquivo ultrapassou o tamanho máximo de {$max_mb}MB", 'Upload');
         }
 
         $file_name = md5($data->timecreated . '-' . $USER->id) . '-' . basename($_FILES['file']['name']);

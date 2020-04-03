@@ -1,3 +1,17 @@
+<?php
+
+$role_shortname = null;
+
+$roleassignment = $DB->get_record('role_assignments', ['userid' => $USER->id]);
+
+$role = $DB->get_record('role', ['id' => $roleassignment->roleid]);
+
+if(isset($role)) {
+	$role_shortname = $role->shortname;
+}
+
+if($role_shortname !== 'student') : ?>
+
 <div class="actions">
 	<div class="panel panel-default">
 	  <div class="panel-heading">Ações</div>
@@ -12,3 +26,5 @@
 	  </div>
 	</div>
 </div>
+
+<?php endif; ?>

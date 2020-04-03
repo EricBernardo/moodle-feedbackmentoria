@@ -58,58 +58,62 @@ function onSubmit() {
 function getActions() {
 	
 	let el = $('.actions .panel-body .overflow');
-		
-	el.html('Carregando...');
+	
+	if(el.length) {
 
-	$.ajax('ajax.php', { 
-		data: { 
-			id: __id,
-			action: 'actions',
-			student_id: $('select[name="student"]').val(),
-			teacher_id: $('select[name="teacher"]').val(),
-			sesskey: M.cfg.sesskey
-		},
-		type: 'get',
-		dataType: 'json'
-	}).done(function(data) {
+		el.html('Carregando...');
 
-		if(typeof(data.error) == 'string') {
-			setModal('Error', data.error, null, 'Fechar'); return;
-		}				
+		$.ajax('ajax.php', { 
+			data: { 
+				id: __id,
+				action: 'actions',
+				student_id: $('select[name="student"]').val(),
+				teacher_id: $('select[name="teacher"]').val(),
+				sesskey: M.cfg.sesskey
+			},
+			type: 'get',
+			dataType: 'json'
+		}).done(function(data) {
 
-		let html = '';
+			if(typeof(data.error) == 'string') {
+				setModal('Error', data.error, null, 'Fechar'); return;
+			}				
 
-		html += ('<table style="width:99%"><tbody>');
+			let html = '';
 
-	    data.actions.map(function(value) {
-	    	
-	    	html += ('<tr>');
-	    	
-	    	html += ('<td width="2%">');
-	    	html += ('<input onClick="actionChecked($(this))" type="checkbox" ' + (value.is_checked == 1 ? 'checked' : '') + ' value="' + value.id + '"/>');
-	    	html += ('</td>');
+			html += ('<table style="width:99%"><tbody>');
 
-	    	html += ('<td>');
-	    	html += (value.name);
-	    	html += ('</td>');
+		    data.actions.map(function(value) {
+		    	
+		    	html += ('<tr>');
+		    	
+		    	html += ('<td width="2%">');
+		    	html += ('<input onClick="actionChecked($(this))" type="checkbox" ' + (value.is_checked == 1 ? 'checked' : '') + ' value="' + value.id + '"/>');
+		    	html += ('</td>');
 
-	    	html += ('<td width="20%">');
-	    	html += ('<div class="btn-remover" onClick="confirmDelete(' + value.id + ')"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
-	    	html += ('</td>');
+		    	html += ('<td>');
+		    	html += (value.name);
+		    	html += ('</td>');
 
-	    	html += ('</tr>');
+		    	html += ('<td width="20%">');
+		    	html += ('<div class="btn-remover" onClick="confirmDelete(' + value.id + ')"><i class="icon fa fa-trash fa-fw " aria-hidden="true"></i><span class="menu-action-text" id="actionmenuaction-13">Apagar</span></div>');
+		    	html += ('</td>');
 
-	    });
+		    	html += ('</tr>');
 
-	    html += ('</tbody></table>');
+		    });
 
-	    setTimeout(function(){
-	    	el.html(html);
-	    }, 1000);
+		    html += ('</tbody></table>');
 
-	}).fail(function() {
-	}).always(function() {
-	});
+		    setTimeout(function(){
+		    	el.html(html);
+		    }, 1000);
+
+		}).fail(function() {
+		}).always(function() {
+		});
+
+	}
 
 }
 

@@ -191,7 +191,7 @@ function mentoringfeedback_messages($mentoringfeedback_id, $teacher_id, $student
             c.id, 
             c.message, 
             c.timecreated,
-            c.attachment,
+            c.file_name,
             concat(us.firstname, ' ', us.lastname) user_send
         FROM mdl_mentoringfeedback_messages c
         JOIN mdl_user us on us.id = c.user_send_id
@@ -214,7 +214,7 @@ function mentoringfeedback_messages_list($messages) {
         $item['id'] = $message->id;
         $item['message'] = nl2br($message->message);
         $item['user_send'] = $message->user_send;
-        $item['attachment'] = $message->attachment ? $CFG->wwwroot . '/mod/mentoringfeedback/uploads/' . $message->attachment : null;
+        $item['download_file'] = $message->file_name ? $CFG->wwwroot . '/mod/mentoringfeedback/download.php?file=' . $message->id : null;
         $item['date'] = date('d/m/Y H:i', $message->timecreated);
         $result[] = $item;
     }
@@ -276,7 +276,8 @@ function mentoringfeedback_message_create($mentoringfeedback_id, $teacher_id, $s
     $data->user_send_id = $USER->id;
     $data->message = $message;    
     $data->timecreated = time();
-    $data->attachment = null;
+    $data->file = null;
+    $data->file_name = null;
 
     if(isset($_FILES['file']['name'])) {
 
@@ -291,27 +292,21 @@ function mentoringfeedback_message_create($mentoringfeedback_id, $teacher_id, $s
         if($mb > $max_mb) {
             throw new moodle_exception("O arquivo ultrapassou o tamanho máximo de {$max_mb}MB", 'Upload');
         }
-
-        $file_name = md5($data->timecreated . '-' . $USER->id) . '-' . basename($_FILES['file']['name']);
-        
-        $uploadfile = './uploads/' . $file_name;
-        
-        if(move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
-            $data->attachment = $file_name;
-        }
+        $data->file = (file_get_contents($_FILES['file']['tmp_name']));
+        $data->file_name = $_FILES['file']['name'];        
 
     }
-    
-    $id = $DB->insert_record('mentoringfeedback_messages', $data);
+
+    $message_id = $DB->insert_record('mentoringfeedback_messages', $data);
 
     $user_send = $DB->get_record('user', array('id' => $data->user_send_id));
     
     return array(
-        'id' => $id,
+        'id' => $message_id,
         'message' => nl2br($message),
         'date' => date('d/m/Y H:i', $data->timecreated),
         'user_send' => $user_send->firstname . ' ' . $user_send->lastname,
-        'attachment' =>  $data->attachment ? $CFG->wwwroot . '/mod/mentoringfeedback/uploads/' . $data->attachment : null
+        'download_file' => $data->file ? $CFG->wwwroot . '/mod/mentoringfeedback/download.php?message_id=' . $message_id : null
     );
 }
 

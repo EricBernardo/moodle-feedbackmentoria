@@ -152,8 +152,8 @@ function getMessages() {
 			html += '<p>'
 				html +='<b>' + value.user_send + ' <span class="date">(' + value.date + ')</span></b>';
 				html += value.message;
-				if(value.attachment) {
-					html += '<a target="_blank" class="attachment" href="' + value.attachment + '">Baixar Arquivo</a>'
+				if(value.download_file) {
+					html += '<a target="_blank" class="attachment" href="' + value.download_file + '">Baixar Arquivo</a>'
 				}
 			html += '</p>'
 
@@ -297,8 +297,8 @@ function messageCreate() {
 			html += '<p>'
 				html +='<b>' + data.message.user_send + ' <span class="date">(' + data.message.date + ')</span></b>';
 				html += data.message.message;
-				if(data.message.attachment) {
-					html += '<a target="_blank" class="attachment" href="' + data.message.attachment + '">Baixar Arquivo</a>'
+				if(data.message.download_file) {
+					html += '<a target="_blank" class="attachment" href="' + data.message.download_file + '">Baixar Arquivo</a>'
 				}
 			html += '</p>';
 

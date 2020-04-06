@@ -214,7 +214,7 @@ function mentoringfeedback_messages_list($messages) {
         $item['id'] = $message->id;
         $item['message'] = nl2br($message->message);
         $item['user_send'] = $message->user_send;
-        $item['download_file'] = $message->file_name ? $CFG->wwwroot . '/mod/mentoringfeedback/download.php?file=' . $message->id : null;
+        $item['download_file'] = $message->file_name ? $CFG->wwwroot . '/mod/mentoringfeedback/download.php?message_id=' . $message->id : null;
         $item['date'] = date('d/m/Y H:i', $message->timecreated);
         $result[] = $item;
     }

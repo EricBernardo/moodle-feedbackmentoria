@@ -217,7 +217,7 @@ echo $OUTPUT->doctype();
 // HTML head.
 echo $OUTPUT->standard_head_html() ?>
     <!-- CSS print media -->
-    <link rel="stylesheet" type="text/css" href="<?php echo $wwwroot; ?>/theme/adaptable/style/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="<?php echo $wwwroot; ?>/theme/adaptable/style/print.css" media="print">   
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Twitter Card data -->
@@ -271,6 +271,7 @@ echo $OUTPUT->standard_head_html() ?>
     <?php
     }
     ?>
+    <link rel="stylesheet" type="text/css" href="<?php echo $wwwroot; ?>/theme/adaptable/style/cwi.css?v=<?php echo time(); ?>"/>
 </head>
 
 <?php
@@ -396,15 +397,6 @@ echo $OUTPUT->standard_top_of_body_html();
                             </form>
                         <?php
                             }
-                        } else {
-                            // Display user profile menu.
-                            ?>
-
-                            <li class="nav-item dropdown ml-3 ml-md-4 mr-2 mr-md-0">
-                                <?php echo $usermenu; ?>
-                            </li>
-
-                        <?php
                         }
                     ?>
 
@@ -429,6 +421,7 @@ echo $OUTPUT->standard_top_of_body_html();
         </div>
 
         <div class="col-lg-8 p-0 my-auto">
+            <?php echo $usermenu; ?>
             <?php
             // Remove Search Box or Social icons in Quiz pages even if they don't use SEB.
             if ($PAGE->pagetype != "mod-quiz-attempt") {
@@ -445,33 +438,7 @@ echo $OUTPUT->standard_top_of_body_html();
             }
                     ?>
 
-                <?php
-                // Search box.
-                if ( (!$hidesitetitle) && ($PAGE->theme->settings->socialorsearch == 'search') ) { ?>
-                    <div class="searchbox d-none d-lg-block">
-                        <form action="<?php echo $wwwroot; ?>/course/search.php">
-                            <label class="hidden" for="search-1" style="display: none;"><?php echo get_string("searchcourses")?>
-                            </label>
-                            <div class="search-box grey-box bg-white clear-fix">
-                                <input placeholder="<?php echo get_string("searchcourses", "theme_adaptable"); ?>"
-                                        accesskey="6"
-                                        class="search_tour bg-white no-border left search-box__input ui-autocomplete-input"
-                                        type="text"
-                                        name="search"
-                                        id="search-1"
-                                        autocomplete="off">
-                                        <button title="<?php echo get_string("searchcourses", "theme_adaptable")?>"
-                                                type="submit" class="no-border bg-white pas search-box__button">
-                                                <abbr class="fa fa-search"
-                                                    title="<?php echo get_string("searchcourses", "theme_adaptable");?>">
-                                                </abbr>
-                                        </button>
-                            </div>
-                        </form>
-                    </div>
-                <?php
-                }
-                ?>
+                
 
                 <div id="course-header">
                     <?php echo $OUTPUT->course_header(); ?>
@@ -798,8 +765,33 @@ if ($shownavbar) {
                     ?>
                 </ul>
 
+                <?php if ( (!$hidesitetitle) && ($PAGE->theme->settings->socialorsearch == 'search') ) : ?>
+                    <div class="searchbox d-none d-lg-block">
+                        <form action="<?php echo $wwwroot; ?>/course/search.php">
+                            <label class="hidden" for="search-1" style="display: none;"><?php echo get_string("searchcourses")?>
+                            </label>
+                            <div class="search-box grey-box bg-white clear-fix">
+                                <input placeholder="<?php echo get_string("searchcourses", "theme_adaptable"); ?>"
+                                        accesskey="6"
+                                        class="search_tour bg-white no-border left search-box__input ui-autocomplete-input"
+                                        type="text"
+                                        name="search"
+                                        id="search-1"
+                                        autocomplete="off">
+                                        <button title="<?php echo get_string("searchcourses", "theme_adaptable")?>"
+                                                type="submit" class="no-border bg-white pas search-box__button">
+                                                <abbr class="fa fa-search"
+                                                    title="<?php echo get_string("searchcourses", "theme_adaptable");?>">
+                                                </abbr>
+                                        </button>
+                            </div>
+                        </form>
+                    </div>
+                <?php endif; ?>
+
             </div>
         </div>
+
     </div>
 </div>
 

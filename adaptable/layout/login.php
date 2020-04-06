@@ -40,7 +40,7 @@ echo '<div class="container outercont">';
     echo $OUTPUT->page_navbar(false);
     ?>
     <div id="page-content" class="row">
-        <section id="region-main" class="col-12">
+        <section id="region-main" class="col-12 teste">
             <?php
 
             $logintextboxtop = $OUTPUT->get_setting('logintextboxtop', 'format_html');

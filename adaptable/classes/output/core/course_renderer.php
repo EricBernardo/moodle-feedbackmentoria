@@ -81,6 +81,124 @@ class course_renderer extends \core_course_renderer {
     }
 
     /**
+     * Renders the list of courses
+     *
+     * This is internal function, please use {@link core_course_renderer::courses_list()} or another public
+     * method from outside of the class
+     *
+     * If list of courses is specified in $courses; the argument $chelper is only used
+     * to retrieve display options and attributes, only methods get_show_courses(),
+     * get_courses_display_option() and get_and_erase_attributes() are called.
+     *
+     * @param coursecat_helper $chelper various display options
+     * @param array $courses the list of courses to display
+     * @param int|null $totalcount total number of courses (affects display mode if it is AUTO or pagination if applicable),
+     *     defaulted to count($courses)
+     * @return string
+     */
+    protected function coursecat_courses(coursecat_helper $chelper, $courses, $totalcount = null) {
+        global $CFG, $DB;
+        if ($totalcount === null) {
+            $totalcount = count($courses);
+        }
+        if (!$totalcount) {
+            // Courses count is cached during courses retrieval.
+            return '';
+        }
+
+        if ($chelper->get_show_courses() == self::COURSECAT_SHOW_COURSES_AUTO) {
+            // In 'auto' course display mode we analyse if number of courses is more or less than $CFG->courseswithsummarieslimit
+            if ($totalcount <= $CFG->courseswithsummarieslimit) {
+                $chelper->set_show_courses(self::COURSECAT_SHOW_COURSES_EXPANDED);
+            } else {
+                $chelper->set_show_courses(self::COURSECAT_SHOW_COURSES_COLLAPSED);
+            }
+        }
+
+        // prepare content of paging bar if it is needed
+        $paginationurl = $chelper->get_courses_display_option('paginationurl');
+        $paginationallowall = $chelper->get_courses_display_option('paginationallowall');
+        if ($totalcount > count($courses)) {
+            // there are more results that can fit on one page
+            if ($paginationurl) {
+                // the option paginationurl was specified, display pagingbar
+                $perpage = $chelper->get_courses_display_option('limit', $CFG->coursesperpage);
+                $page = $chelper->get_courses_display_option('offset') / $perpage;
+                $pagingbar = $this->paging_bar($totalcount, $page, $perpage,
+                        $paginationurl->out(false, array('perpage' => $perpage)));
+                if ($paginationallowall) {
+                    $pagingbar .= html_writer::tag('div', html_writer::link($paginationurl->out(false, array('perpage' => 'all')),
+                            get_string('showall', '', $totalcount)), array('class' => 'paging paging-showall'));
+                }
+            } else if ($viewmoreurl = $chelper->get_courses_display_option('viewmoreurl')) {
+                // the option for 'View more' link was specified, display more link
+                $viewmoretext = $chelper->get_courses_display_option('viewmoretext', new lang_string('viewmore'));
+                $morelink = html_writer::tag('div', html_writer::link($viewmoreurl, $viewmoretext),
+                        array('class' => 'paging paging-morelink'));
+            }
+        } else if (($totalcount > $CFG->coursesperpage) && $paginationurl && $paginationallowall) {
+            // there are more than one page of results and we are in 'view all' mode, suggest to go back to paginated view mode
+            $pagingbar = html_writer::tag('div', html_writer::link($paginationurl->out(false, array('perpage' => $CFG->coursesperpage)),
+                get_string('showperpage', '', $CFG->coursesperpage)), array('class' => 'paging paging-showperpage'));
+        }
+
+        // display list of courses
+        $attributes = $chelper->get_and_erase_attributes('courses');
+        $content = html_writer::start_tag('div', $attributes);
+
+        if (!empty($pagingbar)) {
+            $content .= $pagingbar;
+        }
+
+        $tmp_courses = array();
+        foreach ($courses as $key => $value) {
+            $tmp_courses[$value->category][] = $value;
+        }
+
+        foreach ($tmp_courses as $category_id => $courses) {
+
+            $content .= html_writer::start_tag('div', array('class' => 'category-courses'));
+
+            $content .= html_writer::start_tag('label', array('class' => 'category-title'));
+            $category = $DB->get_record('course_categories', array('id' => $category_id));            
+            $content .= $category->name;
+
+            $content .= html_writer::start_tag('div', array('class' => 'category-view-more'));
+            $content .= 'Ver mais <i>↓</i>';
+            $content .= html_writer::end_tag('div');
+
+            $content .= html_writer::end_tag('label');
+            
+            $coursecount = 0;
+            foreach ($courses as $course) {
+                $coursecount ++;
+                $classes = ($coursecount%2) ? 'odd' : 'even';
+                if ($coursecount == 1) {
+                    $classes .= ' first';
+                }
+                if ($coursecount >= count($courses)) {
+                    $classes .= ' last';
+                }
+                $content .= $this->coursecat_coursebox($chelper, $course, $classes);
+            }
+
+            if (!empty($pagingbar)) {
+                $content .= $pagingbar;
+            }
+            if (!empty($morelink)) {
+                $content .= $morelink;
+            }
+
+            $content .= html_writer::end_tag('div');
+
+        }
+
+        $content .= html_writer::end_tag('div'); // .courses
+
+        return $content;
+    }
+
+    /**
      * Render course tiles in the fron page
      *
      * @param coursecat_helper $chelper
@@ -280,39 +398,26 @@ class course_renderer extends \core_course_renderer {
         if ($type == 2) {
             $content .= html_writer::start_tag('div', array('class' => 'coursebox-content'));
             $coursename = $chelper->get_course_formatted_name($course);
-            $content .= html_writer::tag('h3', html_writer::link(new moodle_url('/course/view.php', array('id' => $course->id)),
-                    $coursename, array('class' => $course->visible ? '' : 'dimmed')));
+            
+            $content .= html_writer::start_tag('h3');
+            
+            // Display course summary.
+            if ($course->has_summary()) {
+                $summs = $chelper->get_course_formatted_summary($course, array('overflowdiv' => false, 'noclean' => true,
+                        'para' => false));
+                $summs = strip_tags($summs);
+                $truncsum = mb_strimwidth($summs, 0, 100, "...", 'utf-8');
+                $content .= html_writer::tag('span', $truncsum, array('title' => $summs));
+            }
+
+            $content .= html_writer::end_tag('h3');
+            
+             
         }
-        $content .= html_writer::start_tag('div', array('class' => 'summary'));
+
         if (ISSET($coursename)) {
             $content .= html_writer::tag('p', html_writer::tag('strong', $coursename));
         }
-        // Display course summary.
-        if ($course->has_summary()) {
-            $summs = $chelper->get_course_formatted_summary($course, array('overflowdiv' => false, 'noclean' => true,
-                    'para' => false));
-            $summs = strip_tags($summs);
-            $truncsum = mb_strimwidth($summs, 0, 70, "...", 'utf-8');
-            $content .= html_writer::tag('span', $truncsum, array('title' => $summs));
-        }
-        $coursecontacts = theme_adaptable_get_setting('tilesshowcontacts');
-        if ($coursecontacts) {
-            $coursecontacttitle = theme_adaptable_get_setting('tilescontactstitle');
-            // Display course contacts. See ::get_course_contacts().
-            if ($course->has_course_contacts()) {
-                $content .= html_writer::start_tag('ul', array('class' => 'teachers'));
-                foreach ($course->get_course_contacts() as $userid => $coursecontact) {
-                    $name = ($coursecontacttitle ? $coursecontact['rolename'].': ' : html_writer::tag('i', '&nbsp;',
-                            array('class' => 'fa fa-graduation-cap')) ).
-                            html_writer::link(new moodle_url('/user/view.php',
-                                    array('id' => $userid, 'course' => SITEID)),
-                                    $coursecontact['username']);
-                            $content .= html_writer::tag('li', $name);
-                }
-                $content .= html_writer::end_tag('ul'); // Teachers.
-            }
-        }
-        $content .= html_writer::end_tag('div'); // Summary.
 
         // Display course category if necessary (for example in search results).
         if ($chelper->get_show_courses() == self::COURSECAT_SHOW_COURSES_EXPANDED_WITH_CAT) {
@@ -330,6 +435,10 @@ class course_renderer extends \core_course_renderer {
             // End course-content.
         }
         $content .= html_writer::tag('div', '', array('class' => 'boxfooter')); // Coursecat.
+
+        $content = html_writer::link(new moodle_url('/course/view.php', array('id' => $course->id)),
+                    $content, array('class' => $course->visible ? '' : 'dimmed'));
+
 
         return $content;
     }

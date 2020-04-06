@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+#page-login-index .pace .pace-progress {
+    background-color: #fbb041; 
+}
+#page-login-index #page {
+    height: 100vh;
+    color: #fff;
+}
+#page-login-index #page .row {
+    margin-right: 0;
+    margin-left: 0;
+    position: relative!important;
+}
+
+
+#page-login-index #above-header,
+#page-login-index #page-header #sitetitle,
+#page-login-index #page-header .searchbox,
+#page-login-index #page-content .maincontent,
+#page-login-index #page-content .my-sm-5,
+#page-login-index #page-content .rememberpass,
+#page-login-index #page-content .btn,
+#page-login-index #page-content .card-body .col-md-5:nth-child(2) .mt-2 p,
+#page-login-index #page-content .card-body .col-md-5:nth-child(2) .mt-3 {
+    display: none !important;
+}
+
+
+#page-login-index #page-header .align-items-start,
+#page-login-index #page-content .card-body .col-md-5:nth-child(2) {
+    -webkit-background-size: contain;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+#page-login-index #page-header {
+    position: fixed;
+}
+
+#page-login-index #page-header.d-none {
+    display: initial !important;
+    position: fixed;
+}
+
+#page-login-index #page-header .align-items-start {
+    height: 32px;
+    width: 175px;
+    margin-top: 40px;
+    background-image: url(https://i.imgur.com/xZDDNDB.png);
+}
+
+
+#page-login-index .outercont {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#page-login-index #page-content {
+    padding: 0;
+    width: 100%;
+}
+
+#page-login-index #page-content {
+    margin: 0; 
+}
+
+#page-login-index #page-content .card {
+    border: none;
+    background-color: rgba(255,255,255,0) !important;
+}
+
+#page-login-index #page-content .card-body {
+    height: 230px;
+}
+
+#page-login-index #page-content .card-body div.row {
+    position: relative;
+    height: 100%;
+}
+
+#page-login-index #page-content .card-body .col-md-5:nth-child(1) {
+    margin-top: 48px;
+    min-width: 246px;
+    flex: initial;
+}
+
+#page-login-index #page-content .form-group input {
+    padding: 1.5rem 2rem;
+    width: 100%;
+    color: #fff;
+}
+
+#page-login-index #page-content .form-control {
+    background: transparent;
+    border-radius: 25px;
+}
+
+#page-login-index #page-content .card-body .col-md-5:nth-child(2) {
+    position: absolute;
+    width: 100%;
+    height: 64px;
+    background-image: url(https://i.imgur.com/xaVEFhp.png);
+}
+
+#page-login-index #logo {
+    display: none;
+}
+
+#adaptable-page-header-wrapper #page-header .row {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+#adaptable-page-header-wrapper #page-header {
+    position: relative;
+}
+
+#adaptable-page-header-wrapper #main-navbar {
+	border-bottom: 0;
+}
+
+#above-header {
+	background: transparent;
+	border-bottom: none;
+}
+
+#page-content .header {
+	display: none;
+}
+
+#edittingbutton {
+	display: none;
+}
+
+[data-region="filter"] {
+    display: none!important;
+}
+
+.search-box {
+    border-radius: 20px;
+    border: 1px solid #a5a9ac;
+    margin-top: 22px;
+    padding: 6px;
+}
+
+.searchbox {
+    margin-left: 20px;
+}
+
+.courses .coursebox {
+    background-color: #fff!important;
+}
+
+.coursebox h3 {
+    font-size: 12px;
+    color: #a5a9ac;
+}
+
+#search-1 {
+  padding: 5px 3px 5px 5px !important;
+  margin: 0 !important;
+  font-size: 14px;
+  color: #444;
+  width: 187px;
+}
+
+.cimbox {
+    background-color: #fff;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 175px;
+    position: relative;
+    margin-right: -1px;
+    transition: all .5s ease-in-out;
+    z-index: 8
+}
+
+.coursebox-content {
+  padding: 5px 0px 10px 0px;
+  text-align: left;
+}
+
+.coursebox.panel.hover .panel-body .coursebox-content h3 {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: inherit;
+    max-width: 100%;
+    line-height: normal;
+    color: #a5a9ac;
+}
+
+.coursebox strong {
+    color: #fbb041;
+    position: absolute;
+    top: 120px;
+    left: 30px;
+    z-index: 8;
+    width: 350px;
+    font-size: 22px;
+}
+
+.coursebox.panel.hover .panel-body:hover {
+    background-color: transparent!important;
+}
+
+.coursebox.panel .panel-body:hover .cimbox {
+    opacity: 1;
+}
+
+#usermenu {
+    float: right;
+    color: #fff;
+}
+
+.category-courses{
+    width: 100%;
+    float: left;
+}
+
+.category-courses .coursebox.panel.hover {
+    float: left;
+}
+
+.category-courses .category-title {
+    float: left;
+    width: 100%;
+    font-size: 22px;
+    font-weight: bold;    
+    padding-left: 20px;
+    position: relative;
+}
+
+.category-courses .category-view-more {
+    float: right;
+    color: #fbb041;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.category-courses .category-view-more i{
+    font-size: 40px;
+    font-weight: 300;
+    margin-left: 5px;
+    margin-top: -20px;
+    float: right;
+}
+
+#adaptable-page-header-wrapper #main-navbar ul.navbar-nav>li>a.nav-link:hover {
+    background-color: #fff!important;
+}
+
+#adaptable-page-header-wrapper .btco-hover-menu .nav-item {
+    border-bottom: 3px solid #fff;
+}
+
+#adaptable-page-header-wrapper .btco-hover-menu .nav-item:hover {
+    border-bottom: 3px solid #fbb041;
+}
+
+#adaptable-page-header-wrapper .btco-hover-menu .nav-item.dropdown:hover {
+    border-bottom: 3px solid #fff;
+}
+
+.dropdown-item {
+    margin-bottom: 5px; 
+    padding-left: 15px;
+}
+
+#adaptable-page-header-wrapper #page-header i {
+    margin-right: 10px;
+}
